@@ -9,7 +9,7 @@ namespace MazeGame
 {
     public sealed class InputManager
     {
-        private static List<(char,Action)> values = new List<(char, Action)>();
+        private static List<(char,Action)> keys = new List<(char, Action)>();
         private static InputManager instance = null;
         public static InputManager Instance
         {
@@ -22,10 +22,26 @@ namespace MazeGame
                 return instance;
             }
         }
-        public void AddKeyHandler(char key,Action action)
+        public static void update()
         {
             if (instance != null) { 
-                values.Add((key,action));
+                keys.ForEach((key) =>
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                        if (keyInfo.KeyChar == key.Item1)
+                        {
+                            key.Item2();
+                        }
+                    }
+                }); 
+            }
+        }
+        public static void AddKeyHandler(char key,Action action)
+        {
+            if (instance != null) { 
+                keys.Add((key,action));
             }
         }
     }
