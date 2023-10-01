@@ -53,7 +53,7 @@ namespace MazeGame
         public override void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
-            Vector2 vector2 = new Vector2(getStartingPoint(_player.StartX, _texture.Width), getStartingPoint(_player.StartY,_texture.Height));
+            Vector2 vector2 = new Vector2(getStartingPoint(_player.Position.X, _texture.Width), getStartingPoint(_player.Position.Y,_texture.Height));
             Vector2 center = new Vector2(_texture.Width / 2, _texture.Height / 2);
             _spriteBatch.Draw(_texture, vector2, null,Color.White,_player.GetRotation(), center, 1,SpriteEffects.None,1);
             _spriteBatch.End();
