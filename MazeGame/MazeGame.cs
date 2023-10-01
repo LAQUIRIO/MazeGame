@@ -19,11 +19,13 @@ public class MazeGame : Game
     private Game _game;
     public MazeGame()
     {
-        IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\Assignment 1\\map5x5.txt");
+        IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\Assignment 1\\map9x13.txt");
         Direction[,] dir = mapProvider.CreateMap();
         map = new Map(mapProvider);
         map.CreateMap();
         _graphics = new GraphicsDeviceManager(this);
+        _graphics.PreferredBackBufferWidth = map.Width * 32;
+        _graphics.PreferredBackBufferHeight = map.Height * 32;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         this.BeginDraw();
@@ -59,7 +61,6 @@ public class MazeGame : Game
     protected override void Draw(GameTime gameTime)
     {
         _spriteBatch.Begin();
-        GraphicsDevice.Clear(Color.CornflowerBlue);
         Block[,] grid = map.MapGrid;
         for (int y = 0; y < grid.GetLength(0); y++)
         {
