@@ -14,7 +14,7 @@ namespace MazeGame
         private List<(Keys, Action)> keys = new List<(Keys, Action)>();
         private static InputManager instance = null;
         private KeyboardState previousState;
-        private static readonly Logger logging = LogManager.GetCurrentClassLogger();
+        private readonly Logger logging = LogManager.GetCurrentClassLogger();
         public static InputManager Instance
         {
             get
@@ -34,7 +34,7 @@ namespace MazeGame
                 {
                     if (state.IsKeyDown(key.Item1)&&previousState.IsKeyUp(key.Item1))
                     {
-                        logging.Info($"Key {key.Item1} pressed");
+                        logging.Info($"{key.Item1} Key pressed");
                         key.Item2();
                     }
                 }
