@@ -11,7 +11,8 @@ public class MazeGame : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    IMap map;
+    private IMap map;
+    private PlayerSprite _playerSprite;
     private Texture2D _wall;
     private Texture2D _floor;
     private Texture2D _player;
@@ -21,20 +22,20 @@ public class MazeGame : Game
     public MazeGame()
     {
         _graphics = new GraphicsDeviceManager(this);
+        IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\Assignment 1\\map9x7.txt");
+        Direction[,] dir = mapProvider.CreateMap();
+        map = new Map(mapProvider);
+        map.CreateMap();
+        _graphics.PreferredBackBufferWidth = map.Width * _textireSize;
+        _graphics.PreferredBackBufferHeight = map.Height * _textireSize;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
 
     protected override void Initialize()
     {
-        IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\Assignment 1\\map9x13.txt");
-        Direction[,] dir = mapProvider.CreateMap();
-        map = new Map(mapProvider);
-        map.CreateMap();
-        _graphics.PreferredBackBufferWidth = map.Width * _textireSize;
-        _graphics.PreferredBackBufferHeight = map.Height * _textireSize;
-        // TODO: Add your initialization logic here
-
+        _playerSprite = new PlayerSprite(this, map.Player);
+        this.Components.Add(_playerSprite);
         base.Initialize();
     }
 
@@ -44,7 +45,6 @@ public class MazeGame : Game
         _goal = Content.Load<Texture2D>("Tree");
         _wall = Content.Load<Texture2D>("wall");
         _floor = Content.Load<Texture2D>("path");
-        // TODO: use this.Content to load your game content here
         base.LoadContent();
     }
 
@@ -68,11 +68,11 @@ public class MazeGame : Game
             {
                 if (grid[y, x] == Block.Solid)
                 {
-                    _spriteBatch.Draw(_wall, new Vector2(x*32, y* _textireSize), Color.White);
+                    _spriteBatch.Draw(_wall, new Vector2(x*_wall.Width, y* _wall.Height), Color.White);
                 }
                 else
                 {
-                    _spriteBatch.Draw(_floor, new Vector2(x*32, y* _textireSize), Color.White);
+                    _spriteBatch.Draw(_floor, new Vector2(x*_floor.Width, y* _floor.Height), Color.White);
                 }
             }
         }
