@@ -4,14 +4,15 @@ using Microsoft.Xna.Framework.Input;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-public delegate void Action();
 
 namespace MazeGame
 {
+    public delegate void Action();
     public sealed class InputManager
     {
-        private static List<(Keys, Action)> keys = new List<(Keys, Action)>();
+        private List<(Keys, Action)> keys = new List<(Keys, Action)>();
         private static InputManager instance = null;
+        private KeyboardState previousState;
         public static InputManager Instance
         {
             get
@@ -23,23 +24,21 @@ namespace MazeGame
                 return instance;
             }
         }
-        public static void Update()
+        public void Update()
         {
-            if (instance != null) { 
-                keys.ForEach((key) =>
+            KeyboardState state = Keyboard.GetState();
+            if (instance != null) {
+                foreach (var key in keys)
                 {
-                    if (Console.KeyAvailable)
+                    if (state.IsKeyDown(key.Item1)&&previousState.IsKeyUp(key.Item1))
                     {
-                        /*ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                        if (keyInfo.KeyChar == key.Item1)
-                        {
-                            key.Item2();
-                        }*/
+                        key.Item2();
                     }
-                }); 
+                }
             }
+            previousState = state;
         }
-        public static void AddKeyHandler(Keys key,Action action)
+        public void AddKeyHandler(Keys key,Action action)
         {
             if (instance != null) { 
                 keys.Add((key,action));
