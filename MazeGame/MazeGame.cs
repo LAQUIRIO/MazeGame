@@ -2,39 +2,41 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using NLog;
 using MazeFromFile;
 using System.Xml.Linq;
+using NLog.Fluent;
 
 namespace MazeGame;
 
 public class MazeGame : Game
 {
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private IMap map;
+    private readonly IMap _map;
     private PlayerSprite _playerSprite;
     private Texture2D _wall;
     private Texture2D _floor;
-    private Texture2D _player;
     private Texture2D _goal;
-    private readonly int _textireSize = 32;
-    private Game _game;
+    private readonly int _texturesSize = 32;
     public MazeGame()
     {
         _graphics = new GraphicsDeviceManager(this);
         IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\Assignment 1\\map9x7.txt");
-        Direction[,] dir = mapProvider.CreateMap();
-        map = new Map(mapProvider);
-        map.CreateMap();
-        _graphics.PreferredBackBufferWidth = map.Width * _textireSize;
-        _graphics.PreferredBackBufferHeight = map.Height * _textireSize;
+        _map = new Map(mapProvider);
+        _map.CreateMap();
+        logger.Info($"Player's starting position: x={_map.Player.StartX}, y={_map.Player.StartY}");
+        logger.Info($"Goal's position: x={_map.Goal.X}, y={_map.Goal.Y}");
+        _graphics.PreferredBackBufferWidth = _map.Width * _texturesSize;
+        _graphics.PreferredBackBufferHeight = _map.Height * _texturesSize;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
 
     protected override void Initialize()
     {
-        _playerSprite = new PlayerSprite(this, map.Player);
+        _playerSprite = new PlayerSprite(this, _map.Player);
         this.Components.Add(_playerSprite);
         base.Initialize();
     }
@@ -52,8 +54,9 @@ public class MazeGame : Game
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-        if (map.IsGameFinished)
+        if (_map.IsGameFinished)
         {
+            logger.Info("Game finished: player has reached the goal");
             Exit();
         }
 
@@ -63,7 +66,7 @@ public class MazeGame : Game
     protected override void Draw(GameTime gameTime)
     {
         _spriteBatch.Begin();
-        Block[,] grid = map.MapGrid;
+        Block[,] grid = _map.MapGrid;
         for (int y = 0; y < grid.GetLength(0); y++)
         {
             for (int x = 0; x < grid.GetLength(1); x++)
@@ -78,7 +81,7 @@ public class MazeGame : Game
                 }
             }
         }
-        _spriteBatch.Draw(_goal, new Vector2(map.Goal.X * _textireSize, map.Goal.Y * _textireSize), Color.White);
+        _spriteBatch.Draw(_goal, new Vector2(_map.Goal.X * _goal.Width, _map.Goal.Y * _goal.Height), Color.White);
         _spriteBatch.End();
         base.Draw(gameTime);
     }
