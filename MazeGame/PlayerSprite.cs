@@ -13,6 +13,7 @@ namespace MazeGame
     internal class PlayerSprite : DrawableGameComponent
     {
         private IPlayer _player;
+        private Texture2D _texture;
         private SpriteBatch _spriteBatch;
         private Game _game;
         private Texture2D _PlayerTexture;
@@ -24,6 +25,29 @@ namespace MazeGame
                 throw new ArgumentNullException(nameof(game));
             }
             _game = game;
+        }
+        public override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_texture, new Vector2(_player.StartX, _player.StartY), Color.White;
+            _spriteBatch.End();
+            base.Draw(gameTime);
+
         }
 
     }
