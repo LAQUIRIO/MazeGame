@@ -1,10 +1,7 @@
 ﻿using Maze;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NLog;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -12,6 +9,7 @@ namespace MazeGame
 {
     internal class PlayerSprite : DrawableGameComponent
     {
+        private readonly Logger logging = LogManager.GetCurrentClassLogger();
         private IPlayer _player;
         private Texture2D _texture;
         private SpriteBatch _spriteBatch;
@@ -52,13 +50,13 @@ namespace MazeGame
 
         public override void Draw(GameTime gameTime)
         {
+            logging.Debug($"Draw player at {_player.Position.X},{_player.Position.Y} looking {_player.Facing}");
             _spriteBatch.Begin();
-            Vector2 vector2 = new Vector2(getStartingPoint(_player.Position.X, _texture.Width), getStartingPoint(_player.Position.Y,_texture.Height));
+            Vector2 vector2 = new Vector2(getStartingPoint(_player.Position.X, _texture.Width), getStartingPoint(_player.Position.Y, _texture.Height));
             Vector2 center = new Vector2(_texture.Width / 2, _texture.Height / 2);
-            _spriteBatch.Draw(_texture, vector2, null,Color.White,_player.GetRotation(), center, 1,SpriteEffects.None,1);
+            _spriteBatch.Draw(_texture, vector2, null, Color.White, _player.GetRotation(), center, 1, SpriteEffects.None, 1);
             _spriteBatch.End();
             base.Draw(gameTime);
-
         }
         private float getStartingPoint(int position, int imgSize)
         {
