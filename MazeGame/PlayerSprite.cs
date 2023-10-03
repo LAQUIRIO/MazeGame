@@ -17,6 +17,7 @@ namespace MazeGame
         private SpriteBatch _spriteBatch;
         private readonly Game _game;
         private InputManager _inputManager;
+        private bool _playerMoved;
 
         public PlayerSprite(Game game, IPlayer player) : base(game)
         {
@@ -29,6 +30,7 @@ namespace MazeGame
         }
         public override void Initialize()
         {
+            _playerMoved = true;
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
             _inputManager = InputManager.Instance;
             _inputManager.AddKeyHandler(Keys.Up, _player.MoveForward);
@@ -45,24 +47,21 @@ namespace MazeGame
             _texture = _game.Content.Load<Texture2D>("LadyBug");
             base.LoadContent();
         }
-
+        c
         public override void Update(GameTime gameTime)
         {
-            _oldPosition.X = _player.Position.X;
-            _oldPosition.Y = _player.Position.Y;
-            _inputManager.Update();
+            _inputManager.Update(value=> _playerMoved = value);
             base.Update(gameTime);
         }
-
         public override void Draw(GameTime gameTime)
         {
-            if (_inputManager.playerMoved)
+            if (_playerMoved)
             {
                 logging.Debug($"Draw player at {_player.Position.X},{_player.Position.Y} looking {_player.Facing}");
                 DrawPlayer();
                 _oldPosition.X = _player.Position.X;
                 _oldPosition.Y = _player.Position.Y;
-                _inputManager.playerMoved = false;
+                _playerMoved = false;
             }
 
         }
