@@ -3,9 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NLog;
-using MazeFromFile;
-using System.Xml.Linq;
-using NLog.Fluent;
+using System;
 
 namespace MazeGame;
 
@@ -15,15 +13,16 @@ public class MazeGame : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private readonly IMap _map;
-    private PlayerSprite _playerSprite;
+    //private PlayerSprite _playerSprite;
     private Texture2D _wall;
     private Texture2D _floor;
     private Texture2D _goal;
     private readonly int _texturesSize = 32;
+    private bool _drawn = false;
     public MazeGame()
     {
         _graphics = new GraphicsDeviceManager(this);
-        IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\Assignment 1\\map9x7.txt");
+        IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\Assignment 1\\map9x13.txt");
         _map = new Map(mapProvider);
         _map.CreateMap();
         logger.Info($"Player's starting position: x={_map.Player.StartX}, y={_map.Player.StartY}");
@@ -36,8 +35,9 @@ public class MazeGame : Game
 
     protected override void Initialize()
     {
-        _playerSprite = new PlayerSprite(this, _map.Player);
-        this.Components.Add(_playerSprite);
+        Window.AllowUserResizing = true;
+        //_playerSprite = new PlayerSprite(this, _map.Player);
+        //this.Components.Add(_playerSprite);
         base.Initialize();
     }
 
@@ -47,6 +47,27 @@ public class MazeGame : Game
         _goal = Content.Load<Texture2D>("Tree");
         _wall = Content.Load<Texture2D>("wall");
         _floor = Content.Load<Texture2D>("path");
+        _spriteBatch.Begin();
+        Block[,] grid = _map.MapGrid;
+        for (int y = 0; y < grid.GetLength(0); y++)
+        {
+            for (int x = 0; x < grid.GetLength(1); x++)
+            {
+                Console.Write("here");
+                logger.Debug($"Drawing block at x={x}, y={y}");
+                if (grid[y, x] == Block.Solid)
+                {
+                    _spriteBatch.Draw(_wall, new Vector2(x * _wall.Width, y * _wall.Height), Color.White);
+                }
+                else
+                {
+                    _spriteBatch.Draw(_floor, new Vector2(x * _floor.Width, y * _floor.Height), Color.White);
+                }
+            }
+        }
+        _spriteBatch.Draw(_goal, new Vector2(_map.Goal.X * _goal.Width, _map.Goal.Y * _goal.Height), Color.White);
+        _drawn = true;
+        _spriteBatch.End();
         base.LoadContent();
     }
 
@@ -65,24 +86,7 @@ public class MazeGame : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        _spriteBatch.Begin();
-        Block[,] grid = _map.MapGrid;
-        for (int y = 0; y < grid.GetLength(0); y++)
-        {
-            for (int x = 0; x < grid.GetLength(1); x++)
-            {
-                if (grid[y, x] == Block.Solid)
-                {
-                    _spriteBatch.Draw(_wall, new Vector2(x*_wall.Width, y* _wall.Height), Color.White);
-                }
-                else
-                {
-                    _spriteBatch.Draw(_floor, new Vector2(x*_floor.Width, y* _floor.Height), Color.White);
-                }
-            }
-        }
-        _spriteBatch.Draw(_goal, new Vector2(_map.Goal.X * _goal.Width, _map.Goal.Y * _goal.Height), Color.White);
-        _spriteBatch.End();
+        
         base.Draw(gameTime);
     }
 }
