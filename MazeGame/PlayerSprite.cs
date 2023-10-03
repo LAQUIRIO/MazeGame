@@ -47,7 +47,6 @@ namespace MazeGame
             _texture = _game.Content.Load<Texture2D>("LadyBug");
             base.LoadContent();
         }
-        c
         public override void Update(GameTime gameTime)
         {
             _inputManager.Update(value=> _playerMoved = value);
