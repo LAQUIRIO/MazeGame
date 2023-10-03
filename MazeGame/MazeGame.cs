@@ -18,11 +18,10 @@ public class MazeGame : Game
     private Texture2D _floor;
     private Texture2D _goal;
     private readonly int _texturesSize = 32;
-    private bool _drawn = false;
     public MazeGame()
     {
         _graphics = new GraphicsDeviceManager(this);
-        IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\Assignment 1\\map9x13.txt");
+        IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\BoucherAssignment2\\map9x7.txt");
         _map = new Map(mapProvider);
         _map.CreateMap();
         logger.Info($"Player's starting position: x={_map.Player.StartX}, y={_map.Player.StartY}");
@@ -48,6 +47,7 @@ public class MazeGame : Game
         _goal = Content.Load<Texture2D>("Tree");
         _wall = Content.Load<Texture2D>("wall");
         _floor = Content.Load<Texture2D>("path");
+        DrawMap();
         base.LoadContent();
     }
 
@@ -66,9 +66,27 @@ public class MazeGame : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        if (!_drawn)
-        {
-        }
-        _playerSprite.Draw(gameTime);
+        base.Draw(gameTime);
     }
+    private void DrawMap()
+    {
+        Block[,] grid = _map.MapGrid;
+        _spriteBatch.Begin();
+        for (int y = 0; y < grid.GetLength(0); y++)
+        {
+            for (int x = 0; x < grid.GetLength(1); x++)
+            {
+                if (grid[y, x] == Block.Solid)
+                {
+                    _spriteBatch.Draw(_wall, new Vector2(x * _wall.Width, y * _wall.Height), Color.White);
+                }
+                else
+                {
+                    _spriteBatch.Draw(_floor, new Vector2(x * _floor.Width, y * _floor.Height), Color.White);
+                }
+            }
+        }
+        _spriteBatch.Draw(_goal, new Vector2(_map.Goal.X * _goal.Width, _map.Goal.Y * _goal.Height), Color.White);
+        _spriteBatch.End();
+    }   
 }

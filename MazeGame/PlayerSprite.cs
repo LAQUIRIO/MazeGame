@@ -48,29 +48,22 @@ namespace MazeGame
 
         public override void Update(GameTime gameTime)
         {
-            if (!_inputManager.playerMoved)
-            {
-                _inputManager.Update();
-
-            }
+            _inputManager.Update();
+            _oldPosition = new Vector2(_player.Position.X, _player.Position.Y);
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            if (_inputManager.playerMoved)
-            {
-                logging.Debug($"Draw player at {_player.Position.X},{_player.Position.Y} looking {_player.Facing}");
-                _spriteBatch.Begin();
-                Vector2 vector2 = new Vector2(getStartingPoint(_player.Position.X, _texture.Width), getStartingPoint(_player.Position.Y, _texture.Height));
-                Vector2 center = new Vector2(_texture.Width / 2, _texture.Height / 2);
-                _spriteBatch.Draw(_floor, new Vector2(_oldPosition.X * _floor.Width, _oldPosition.Y * _floor.Height), Color.White);
-                _oldPosition = new Vector2(_player.Position.X, _player.Position.Y);
-                _spriteBatch.Draw(_texture, vector2, null, Color.White, _player.GetRotation(), center, 1, SpriteEffects.None, 1);
-                _inputManager.playerMoved = false;
-                _spriteBatch.End();
-                base.Draw(gameTime);
-            }
+            logging.Debug($"Draw player at {_player.Position.X},{_player.Position.Y} looking {_player.Facing}");
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_floor, new Vector2(_oldPosition.X * _floor.Width, _oldPosition.Y * _floor.Height), Color.White);
+            Vector2 vector2 = new Vector2(getStartingPoint(_player.Position.X, _texture.Width), getStartingPoint(_player.Position.Y, _texture.Height));
+            Vector2 center = new Vector2(_texture.Width / 2, _texture.Height / 2);
+            _spriteBatch.Draw(_texture, vector2, null, Color.White, _player.GetRotation(), center, 1, SpriteEffects.None, 1);
+            _inputManager.playerMoved = false;
+            _spriteBatch.End();
+            
         }
         private float getStartingPoint(int position, int imgSize)
         {

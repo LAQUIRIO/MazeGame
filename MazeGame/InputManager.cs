@@ -15,6 +15,7 @@ namespace MazeGame
         private static InputManager instance = null;
         private KeyboardState previousState;
         private readonly Logger logging = LogManager.GetCurrentClassLogger();
+        public Boolean playerMoved = false;
         public static InputManager Instance
         {
             get
@@ -22,6 +23,7 @@ namespace MazeGame
                 if (instance == null)
                 {
                     instance = new InputManager();
+                    instance.playerMoved = true;
                 }
                 return instance;
             }
@@ -36,6 +38,7 @@ namespace MazeGame
                     {
                         logging.Info($"{key.Item1} Key pressed");
                         key.Item2();
+                        playerMoved = true;
                     }
                 }
             }
