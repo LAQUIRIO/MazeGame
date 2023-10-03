@@ -36,7 +36,7 @@ namespace MazeGame
                 {
                     if (state.IsKeyDown(key.Item1)&&previousState.IsKeyUp(key.Item1))
                     {
-                        logging.Info($"{key.Item1} Key pressed");
+                        logging.Info($" {key.Item1} Key pressed");
                         key.Item2();
                         playerMoved = true;
                     }

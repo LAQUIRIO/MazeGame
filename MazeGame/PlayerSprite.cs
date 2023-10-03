@@ -48,22 +48,32 @@ namespace MazeGame
 
         public override void Update(GameTime gameTime)
         {
+            _oldPosition.X = _player.Position.X;
+            _oldPosition.Y = _player.Position.Y;
             _inputManager.Update();
-            _oldPosition = new Vector2(_player.Position.X, _player.Position.Y);
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            logging.Debug($"Draw player at {_player.Position.X},{_player.Position.Y} looking {_player.Facing}");
+            if (_inputManager.playerMoved)
+            {
+                logging.Debug($"Draw player at {_player.Position.X},{_player.Position.Y} looking {_player.Facing}");
+                DrawPlayer();
+                _oldPosition.X = _player.Position.X;
+                _oldPosition.Y = _player.Position.Y;
+                _inputManager.playerMoved = false;
+            }
+
+        }
+        private void DrawPlayer()
+        {
             _spriteBatch.Begin();
             _spriteBatch.Draw(_floor, new Vector2(_oldPosition.X * _floor.Width, _oldPosition.Y * _floor.Height), Color.White);
             Vector2 vector2 = new Vector2(getStartingPoint(_player.Position.X, _texture.Width), getStartingPoint(_player.Position.Y, _texture.Height));
             Vector2 center = new Vector2(_texture.Width / 2, _texture.Height / 2);
             _spriteBatch.Draw(_texture, vector2, null, Color.White, _player.GetRotation(), center, 1, SpriteEffects.None, 1);
-            _inputManager.playerMoved = false;
             _spriteBatch.End();
-            
         }
         private float getStartingPoint(int position, int imgSize)
         {
