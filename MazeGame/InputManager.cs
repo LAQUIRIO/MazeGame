@@ -8,7 +8,6 @@ using NLog;
 
 namespace MazeGame
 {
-    public delegate void Action();
     public delegate void HasPLayerMoved(bool hasMoved);
     public sealed class InputManager
     {
@@ -16,7 +15,6 @@ namespace MazeGame
         private static InputManager instance = null;
         private KeyboardState previousState;
         private readonly Logger logging = LogManager.GetCurrentClassLogger();
-        public Boolean playerMoved = false;
         public static InputManager Instance
         {
             get
@@ -24,7 +22,6 @@ namespace MazeGame
                 if (instance == null)
                 {
                     instance = new InputManager();
-                    instance.playerMoved = true;
                 }
                 return instance;
             }
