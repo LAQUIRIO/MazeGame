@@ -3,7 +3,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NLog;
-using System;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Color = Microsoft.Xna.Framework.Color;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace MazeGame;
 
@@ -12,7 +17,7 @@ public class MazeGame : Game
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private readonly IMap _map;
+    private IMap _map;
     private PlayerSprite _playerSprite;
     private Texture2D _wall;
     private Texture2D _floor;
@@ -21,26 +26,41 @@ public class MazeGame : Game
     public MazeGame()
     {
         _graphics = new GraphicsDeviceManager(this);
-        IMapProvider mapProvider = new MazeFromFile.MazeFromFile("C:\\Users\\laqui\\OneDrive\\c#\\2\\BoucherAssignment2\\map9x7.txt");
-        _map = new Map(mapProvider);
-        _map.CreateMap();
-        logger.Info($"Player's starting position: x={_map.Player.StartX}, y={_map.Player.StartY}");
-        logger.Info($"Goal's position: x={_map.Goal.X}, y={_map.Goal.Y}");
-        _graphics.PreferredBackBufferWidth = _map.Width * _texturesSize;
-        _graphics.PreferredBackBufferHeight = _map.Height * _texturesSize;
-        _graphics.PreferMultiSampling = true;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
 
     protected override void Initialize()
     {
-        Window.AllowUserResizing = true;
+        IMapProvider mapProvider = SelectMap();
+        _map = new Map(mapProvider);
+        _map.CreateMap();
+        
+        logger.Info($"Player's starting position: x={_map.Player.StartX}, y={_map.Player.StartY}");
+        logger.Info($"Goal's position: x={_map.Goal.X}, y={_map.Goal.Y}");
+
+        _graphics.PreferredBackBufferWidth = _map.Width * _texturesSize;
+        _graphics.PreferredBackBufferHeight = _map.Height * _texturesSize;
+        _graphics.ApplyChanges();
+
         _playerSprite = new PlayerSprite(this, _map.Player);
         this.Components.Add(_playerSprite);
         base.Initialize();
     }
+    private IMapProvider SelectMap()
+    {
+        string path = "";
+        using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //Get the path of specified file
+                path = openFileDialog.FileName;
 
+            }
+        }
+        return new MazeFromFile.MazeFromFile(path);
+    }
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
