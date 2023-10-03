@@ -13,7 +13,7 @@ public class MazeGame : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private readonly IMap _map;
-    //private PlayerSprite _playerSprite;
+    private PlayerSprite _playerSprite;
     private Texture2D _wall;
     private Texture2D _floor;
     private Texture2D _goal;
@@ -29,6 +29,7 @@ public class MazeGame : Game
         logger.Info($"Goal's position: x={_map.Goal.X}, y={_map.Goal.Y}");
         _graphics.PreferredBackBufferWidth = _map.Width * _texturesSize;
         _graphics.PreferredBackBufferHeight = _map.Height * _texturesSize;
+        _graphics.PreferMultiSampling = true;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -36,8 +37,8 @@ public class MazeGame : Game
     protected override void Initialize()
     {
         Window.AllowUserResizing = true;
-        //_playerSprite = new PlayerSprite(this, _map.Player);
-        //this.Components.Add(_playerSprite);
+        _playerSprite = new PlayerSprite(this, _map.Player);
+        this.Components.Add(_playerSprite);
         base.Initialize();
     }
 
@@ -47,27 +48,6 @@ public class MazeGame : Game
         _goal = Content.Load<Texture2D>("Tree");
         _wall = Content.Load<Texture2D>("wall");
         _floor = Content.Load<Texture2D>("path");
-        _spriteBatch.Begin();
-        Block[,] grid = _map.MapGrid;
-        for (int y = 0; y < grid.GetLength(0); y++)
-        {
-            for (int x = 0; x < grid.GetLength(1); x++)
-            {
-                Console.Write("here");
-                logger.Debug($"Drawing block at x={x}, y={y}");
-                if (grid[y, x] == Block.Solid)
-                {
-                    _spriteBatch.Draw(_wall, new Vector2(x * _wall.Width, y * _wall.Height), Color.White);
-                }
-                else
-                {
-                    _spriteBatch.Draw(_floor, new Vector2(x * _floor.Width, y * _floor.Height), Color.White);
-                }
-            }
-        }
-        _spriteBatch.Draw(_goal, new Vector2(_map.Goal.X * _goal.Width, _map.Goal.Y * _goal.Height), Color.White);
-        _drawn = true;
-        _spriteBatch.End();
         base.LoadContent();
     }
 
@@ -86,7 +66,9 @@ public class MazeGame : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        
-        base.Draw(gameTime);
+        if (!_drawn)
+        {
+        }
+        _playerSprite.Draw(gameTime);
     }
 }
