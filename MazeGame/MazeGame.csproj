@@ -21,7 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MazeFromFile">
-      <HintPath>..\..\Assignment 1\MazeFromFile.dll</HintPath>
+      <HintPath>..\MazeFromFile.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
