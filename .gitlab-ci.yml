@@ -24,8 +24,8 @@ unit-test:
             junit:
                 - ./**/*test-result.xml
 
-publish:
-    stage: publish
+deploy:
+    stage: deploy
     script:
         - dotnet publish -c Release -o ./MazeGame
     artifacts:
