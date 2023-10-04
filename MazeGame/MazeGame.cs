@@ -15,7 +15,7 @@ namespace MazeGame;
 public class MazeGame : Game
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-    private GraphicsDeviceManager _graphics;
+    private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private IMap _map;
     private PlayerSprite _playerSprite;
@@ -35,7 +35,7 @@ public class MazeGame : Game
         IMapProvider mapProvider = SelectMap();
         _map = new Map(mapProvider);
         _map.CreateMap();
-        
+
         logger.Info($"Player's starting position: x={_map.Player.StartX}, y={_map.Player.StartY}");
         logger.Info($"Goal's position: x={_map.Goal.X}, y={_map.Goal.Y}");
 
@@ -47,7 +47,7 @@ public class MazeGame : Game
         this.Components.Add(_playerSprite);
         base.Initialize();
     }
-    private IMapProvider SelectMap()
+    private static IMapProvider SelectMap()
     {
         string path = "";
         using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -57,6 +57,7 @@ public class MazeGame : Game
                 //Get the path of specified file
                 path = openFileDialog.FileName;
 
+                logger.Info($"Selected map: {path}");
             }
         }
         return new MazeFromFile.MazeFromFile(path);
@@ -74,7 +75,10 @@ public class MazeGame : Game
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        { 
+            logger.Info("Game finished: player has quit");
             Exit();
+        }
         if (_map.IsGameFinished)
         {
             logger.Info("Game finished: player has reached the goal");
@@ -98,10 +102,12 @@ public class MazeGame : Game
             {
                 if (grid[y, x] == Block.Solid)
                 {
+                    logger.Debug($"Draw wall at {x},{y}");
                     _spriteBatch.Draw(_wall, new Vector2(x * _wall.Width, y * _wall.Height), Color.White);
                 }
                 else
                 {
+                    logger.Debug($"Draw path at {x},{y}");
                     _spriteBatch.Draw(_floor, new Vector2(x * _floor.Width, y * _floor.Height), Color.White);
                 }
             }
