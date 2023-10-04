@@ -31,8 +31,8 @@ namespace Maze
 
         public float GetRotation()
         {
-            return (float)(Math.Log2((Double)Facing) * Math.PI / 2);
-            /*switch (Facing)
+            float pi = (float)Math.PI;
+            switch (Facing)
             {
                 case Direction.N:
                     return 0;
@@ -44,27 +44,30 @@ namespace Maze
                     return 3 * pi / 2;
                 default:
                     return 0;
-            }*/
+            }
         }
 
         private bool IsMoveValid(MapVector position)
         {
-            if (_MapGrid == null) return false;
-            if (_MapGrid[position.Y,position.X] == Block.Empty) return true;
-            else return false;
+            if (_MapGrid == null)
+            {
+                return false;
+            }
+            return _MapGrid[position.Y,position.X] == Block.Empty;
+            
         }
         public void MoveBackward()
         {
-            if (IsMoveValid(Position - (MapVector)Facing)){
-                Position -= (MapVector)Facing;
+            if (IsMoveValid(Position - Facing)){
+                Position -= Facing;
             }
         }
 
         public void MoveForward()
         {
-            if (IsMoveValid(Position + (MapVector)Facing))
+            if (IsMoveValid(Position + Facing))
             {
-                Position += (MapVector)Facing;
+                Position += Facing;
             }
         }
 
