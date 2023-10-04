@@ -1,12 +1,6 @@
 default:
   image: mcr.microsoft.com/dotnet/sdk:6.0
 
-install_zip:
-    stage: setup
-    script:
-    - apt-get update -y
-    - apt-get install zip -y
-    
 build-debug:
     stage: build
     script:
@@ -33,6 +27,8 @@ unit-test:
 deploy:
     stage: deploy
     script:
+        - apt-get update -y
+        - apt-get install zip -y
         - dotnet publish -c Release -o ./MazeGame
         - zip -r MazeGame.zip ./MazeGame
     artifacts:
