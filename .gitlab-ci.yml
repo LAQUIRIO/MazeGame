@@ -17,20 +17,19 @@ unit-test:
         - 'dotnet test --test-adapter-path:. --logger:"junit;LogFilePath=..\artifacts\{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"'
     artifacts:
         when: always
-        expire_in: 1 weeks
+        expire_in: 7 days
         paths:
             - ./**/*test-result.xml
         reports:
             junit:
                 - ./**/*test-result.xml
 
-deploy:
+publish:
     stage: publish
     script:
         - dotnet publish -c Release -o ./MazeGame
-        - zip -r MazeGame.zip ./MazeGame
     artifacts:
         when: always
-        expire_in: 2 weeks
+        expire_in: 14 days
+        paths:
             - ./MazeGame.zip
-
