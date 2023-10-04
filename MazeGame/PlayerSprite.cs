@@ -32,11 +32,13 @@ namespace MazeGame
         {
             _playerMoved = true;
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+
             _inputManager = InputManager.Instance;
             _inputManager.AddKeyHandler(Keys.Up, _player.MoveForward);
             _inputManager.AddKeyHandler(Keys.Down, _player.MoveBackward);
             _inputManager.AddKeyHandler(Keys.Left, _player.TurnLeft);
             _inputManager.AddKeyHandler(Keys.Right, _player.TurnRight);
+
             _oldPosition = new Vector2(_player.Position.X, _player.Position.Y);
             base.Initialize();
         }
@@ -56,8 +58,8 @@ namespace MazeGame
         {
             if (_playerMoved)
             {
-                logging.Debug($"Draw player at {_player.Position.X},{_player.Position.Y} looking {_player.Facing}");
                 DrawPlayer();
+                logging.Debug($"Draw player at {_player.Position.X},{_player.Position.Y} looking {_player.Facing}");
                 _oldPosition.X = _player.Position.X;
                 _oldPosition.Y = _player.Position.Y;
                 _playerMoved = false;
@@ -67,9 +69,14 @@ namespace MazeGame
         private void DrawPlayer()
         {
             _spriteBatch.Begin();
+            logging.Debug($"Draw path at {_oldPosition.X},{_oldPosition.Y}");
+            //draw floor on old position
             _spriteBatch.Draw(_floor, new Vector2(_oldPosition.X * _floor.Width, _oldPosition.Y * _floor.Height), Color.White);
+            //set player position to center of the block
             Vector2 vector2 = new Vector2(getStartingPoint(_player.Position.X, _texture.Width), getStartingPoint(_player.Position.Y, _texture.Height));
+            //set rotation point to center of the image
             Vector2 center = new Vector2(_texture.Width / 2, _texture.Height / 2);
+            //draw player
             _spriteBatch.Draw(_texture, vector2, null, Color.White, _player.GetRotation(), center, 1, SpriteEffects.None, 1);
             _spriteBatch.End();
         }
