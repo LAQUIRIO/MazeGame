@@ -1,6 +1,12 @@
 default:
   image: mcr.microsoft.com/dotnet/sdk:6.0
 
+install_zip:
+    stage: setup
+    script:
+    - apt-get update -y
+    - apt-get install zip -y
+    
 build-debug:
     stage: build
     script:
