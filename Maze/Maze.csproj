@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="5.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MazeFromFile">
+      <HintPath>..\MazeFromFile.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
