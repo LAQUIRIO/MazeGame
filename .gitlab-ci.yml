@@ -24,7 +24,7 @@ unit-test:
             junit:
                 - ./**/*test-result.xml
 
-publish:
+deploy:
     stage: publish
     script:
         - dotnet publish -c Release -o ./MazeGame
@@ -33,4 +33,4 @@ publish:
         when: always
         expire_in: 2 weeks
             - ./MazeGame.zip
-```
+
