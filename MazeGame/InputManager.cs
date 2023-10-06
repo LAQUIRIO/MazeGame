@@ -10,7 +10,7 @@ namespace MazeGame
 {
     public sealed class InputManager
     {
-        private List<(Keys, Action)> keys = new List<(Keys, Action)>();
+        private Dictionary<Keys, Action> keys = new Dictionary<Keys, Action>();
         private static InputManager instance = null;
         private KeyboardState previousState;
         private readonly Logger logging = LogManager.GetCurrentClassLogger();
@@ -31,10 +31,10 @@ namespace MazeGame
             if (instance != null) {
                 foreach (var key in keys)
                 {
-                    if (state.IsKeyDown(key.Item1)&&previousState.IsKeyUp(key.Item1))
+                    if (state.IsKeyDown(key.Key)&&previousState.IsKeyUp(key.Key))
                     {
-                        logging.Info($" {key.Item1} Key pressed");
-                        key.Item2();
+                        logging.Info($" {key.Key} Key pressed");
+                        key.Value();
                     }
                 }
             }
@@ -42,8 +42,15 @@ namespace MazeGame
         }
         public void AddKeyHandler(Keys key,Action action)
         {
-            if (instance != null) { 
-                keys.Add((key,action));
+            if (instance != null) {
+                if (keys.ContainsKey(key))
+                {
+                    keys[key] += action;
+                }
+                else
+                {
+                    keys.Add(key, action);
+                }
             }
         }
     }
