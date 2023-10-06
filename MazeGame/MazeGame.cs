@@ -36,6 +36,7 @@ public class MazeGame : Game
         _map = new Map(mapProvider);
         _map.CreateMap();
 
+        base.Exiting += (sender, args) => logger.Info($"Game finished: game window is closed");
         logger.Info($"Player's starting position: x={_map.Player.StartX}, y={_map.Player.StartY}");
         logger.Info($"Goal's position: x={_map.Goal.X}, y={_map.Goal.Y}");
 
