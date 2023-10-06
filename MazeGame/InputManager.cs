@@ -8,7 +8,6 @@ using NLog;
 
 namespace MazeGame
 {
-    public delegate void HasPLayerMoved(bool hasMoved);
     public sealed class InputManager
     {
         private List<(Keys, Action)> keys = new List<(Keys, Action)>();
@@ -26,7 +25,7 @@ namespace MazeGame
                 return instance;
             }
         }
-        public void Update(HasPLayerMoved setPLayerMoved)
+        public void Update()
         {
             KeyboardState state = Keyboard.GetState();
             if (instance != null) {
@@ -36,7 +35,6 @@ namespace MazeGame
                     {
                         logging.Info($" {key.Item1} Key pressed");
                         key.Item2();
-                        setPLayerMoved(true);
                     }
                 }
             }
