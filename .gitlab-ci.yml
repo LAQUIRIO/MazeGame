@@ -29,7 +29,7 @@ deploy:
     script:
         - apt-get update -y
         - apt-get install zip -y
-        - dotnet publish -c Release -o ./MazeGame
+        - dotnet publish -c Release -r win-x64 -o ./MazeGame
         - zip -r MazeGame.zip ./MazeGame
     artifacts:
         when: always
