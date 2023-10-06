@@ -34,13 +34,21 @@ namespace MazeGame
             _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
 
             _inputManager = InputManager.Instance;
-            _inputManager.AddKeyHandler(Keys.Up, _player.MoveForward);
-            _inputManager.AddKeyHandler(Keys.Down, _player.MoveBackward);
-            _inputManager.AddKeyHandler(Keys.Left, _player.TurnLeft);
-            _inputManager.AddKeyHandler(Keys.Right, _player.TurnRight);
+            _inputManager.AddKeyHandler(Keys.Up, PlayerMoved(_player.MoveForward));
+            _inputManager.AddKeyHandler(Keys.Down, PlayerMoved(_player.MoveBackward));
+            _inputManager.AddKeyHandler(Keys.Left, PlayerMoved(_player.TurnLeft));
+            _inputManager.AddKeyHandler(Keys.Right, PlayerMoved(_player.TurnRight));
 
             _oldPosition = new Vector2(_player.Position.X, _player.Position.Y);
             base.Initialize();
+        }
+
+        private Action PlayerMoved(Action playerAction) {
+            return ()=>
+            {
+                playerAction();
+                _playerMoved = true;
+            };
         }
 
         protected override void LoadContent()
@@ -51,7 +59,7 @@ namespace MazeGame
         }
         public override void Update(GameTime gameTime)
         {
-            _inputManager.Update(value=> _playerMoved = value);
+            _inputManager.Update();
             base.Update(gameTime);
         }
         public override void Draw(GameTime gameTime)
