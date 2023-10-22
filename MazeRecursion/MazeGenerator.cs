@@ -1,12 +1,13 @@
 ﻿namespace MazeRecursion;
 using Maze;
-public class MazeRecursion : IMapProvider
+
+public class MazeGenerator : IMapProvider
 {
     private Direction[,]? _directions;
     private List<MapVector> _path;
     private readonly Random _rand = new Random();
     private MapVector? _startingVector;
-    public MazeRecursion(MapVector? startingVector)
+    public MazeGenerator(MapVector? startingVector)
     {
         _path = new List<MapVector>();
         _startingVector = startingVector;
