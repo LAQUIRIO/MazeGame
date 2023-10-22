@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maze", "Maze\Maze.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MazeTests", "MazeTests\MazeTests.csproj", "{E9BE8E2F-AE84-47B8-A2E2-0CA356A5DA27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeRecursion", "MazeRecursion\MazeRecursion.csproj", "{1C4D5567-7CDE-4A22-B532-3C2C2513488F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeRecursionTests", "MazeRecursionTests\MazeRecursionTests.csproj", "{4CF1558D-6247-4A47-BF69-F2E276BD8645}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{E9BE8E2F-AE84-47B8-A2E2-0CA356A5DA27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9BE8E2F-AE84-47B8-A2E2-0CA356A5DA27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9BE8E2F-AE84-47B8-A2E2-0CA356A5DA27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C4D5567-7CDE-4A22-B532-3C2C2513488F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C4D5567-7CDE-4A22-B532-3C2C2513488F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C4D5567-7CDE-4A22-B532-3C2C2513488F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C4D5567-7CDE-4A22-B532-3C2C2513488F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CF1558D-6247-4A47-BF69-F2E276BD8645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CF1558D-6247-4A47-BF69-F2E276BD8645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CF1558D-6247-4A47-BF69-F2E276BD8645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CF1558D-6247-4A47-BF69-F2E276BD8645}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
