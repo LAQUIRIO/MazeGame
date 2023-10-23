@@ -20,9 +20,26 @@ namespace MazeRecursion.Tests
             _mapProvider = new MazeGenerator(vector, 1);
         }
         [TestMethod()]
-        public void MazeGeneratorTest()
+        public void createMapWithValuesTest()
         {
-            Assert.Fail();
+            Direction[,] ExpectedMaze = new Direction[,]
+            {
+                {Direction.S, Direction.E|Direction.S, Direction.E|Direction.W, Direction.S|Direction.W},
+                {Direction.N|Direction.E, Direction.N|Direction.W, Direction.S, Direction.N|Direction.E},
+                {Direction.E|Direction.S, Direction.E|Direction.S|Direction.W, Direction.N|Direction.W, Direction.E|Direction.S},
+                {Direction.N|Direction.S, Direction.N|Direction.E, Direction.S|Direction.W, Direction.N|Direction.E},
+            };
+            int expectedArraySizes = 5;
+            Direction[,] directions = _mapProvider.CreateMap(4,4);
+            Assert.AreEqual(expectedArraySizes, directions.GetLength(0));
+            Assert.AreEqual(expectedArraySizes, directions.GetLength(1));
+            for (int i = 0; i < expectedArraySizes; i++)
+            {
+                for (int j = 0; j < expectedArraySizes; j++)
+                {
+                    Assert.AreEqual(ExpectedMaze[i, j], directions[i, j]);
+                }
+            }
         }
 
         [TestMethod()]
@@ -47,14 +64,7 @@ namespace MazeRecursion.Tests
                     Assert.AreEqual(ExpectedMaze[i, j], directions[i, j]);
                 }
             }
-
-
         }
 
-        [TestMethod()]
-        public void CreateMapTest1()
-        {
-            Direction[,] directions = _mapProvider.CreateMap(10, 10);
-        }
     }
 }
