@@ -89,9 +89,9 @@ namespace Maze
 
         public void CreateMap(int width, int height)
         {
-            throw new NotImplementedException();
-            //_directionMap = _mapProvider.CreateMap(width, height);
-            //Initializer();
+            _directionMap = _mapProvider.CreateMap(width, height);
+            MapGrid = new Block[_directionMap.GetLength(0) * 2 + 1, _directionMap.GetLength(1) * 2 + 1];
+            Initializer();
         }
 
         private void PopulateMap()
