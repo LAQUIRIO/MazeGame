@@ -5,12 +5,20 @@ public class MazeGenerator : IMapProvider
 {
     private Direction[,]? _directions;
     private List<MapVector> _path;
-    private readonly Random _rand = new Random();
+    private readonly Random _rand;
     private MapVector? _startingVector;
-    public MazeGenerator(MapVector? startingVector)
+    public MazeGenerator(MapVector? startingVector, int? randomSeed)
     {
         _path = new List<MapVector>();
         _startingVector = startingVector;
+        if (randomSeed.HasValue)
+        {
+            _rand = new Random(randomSeed.Value);
+        }
+        else
+        {
+            _rand = new Random();
+        }
     }
      
     private void Walk(MapVector providedVect)
@@ -20,19 +28,32 @@ public class MazeGenerator : IMapProvider
             return;
         }
         _path.Add(providedVect);
-        List<Direction> dirs = GetPossibleDirections(providedVect);
+        List<Direction> dirs = ShuffleDirections(providedVect);
 
+        foreach (var dir in dirs)
+        {
+            if (DirectionISValid(providedVect+dir))
+            { 
+                _directions[providedVect.Y, providedVect.X] |= dir;
+                MapVector newVect = providedVect + dir;
+                _directions[newVect.Y, newVect.X] |= GetOppositeDir(dir);
+
+                Walk(newVect);
+            }
+        }
+    }
+
+    private List<Direction> ShuffleDirections(MapVector providedVect)
+    {
+        List<Direction> dirs = new List<Direction>((Direction[])Enum.GetValues(typeof(Direction)));
+        List<Direction> result = new List<Direction>();
         while (dirs.Count > 0)
         {
-            Direction dir = dirs[_rand.Next(0, dirs.Count)];
-            _directions[providedVect.Y, providedVect.X] |= dir;
-            MapVector newVect = providedVect + dir;
-            _directions[newVect.Y, newVect.X] |= GetOppositeDir(dir);
-
-            Walk(newVect);
-
-            dirs = GetPossibleDirections(providedVect);
+            int index = _rand.Next(0, dirs.Count);
+            result.Add(dirs[index]);
+            dirs.RemoveAt(index);
         }
+        return result;
     }
 
     private static Direction GetOppositeDir(Direction dir)
@@ -48,26 +69,9 @@ public class MazeGenerator : IMapProvider
         };
     }
 
-    private List<Direction> GetPossibleDirections(MapVector providedVect)
+    private bool DirectionISValid(MapVector newVect)
     {
-        if (_directions == null)
-        {
-            throw new Exception("Direction map is null");
-        }
-        Direction[] directions = (Direction[])Enum.GetValues(typeof(Direction));
-        List<Direction> result = new List<Direction>();
-        foreach (var dir in directions)
-        {
-            MapVector newVect = providedVect + dir;
-            if (newVect.InsideBoundary(_directions.GetLength(0), _directions.GetLength(1)))
-            {
-                if (!_path.Contains(newVect))
-                {
-                    result.Add(dir);
-                }
-            }
-        }
-        return result;
+        return newVect.InsideBoundary(_directions!.GetLength(0), _directions.GetLength(1))&& !_path.Contains(newVect);
     }
 
     public Direction[,] CreateMap(int width, int height)
