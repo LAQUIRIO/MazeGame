@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Maze\Maze.csproj" />
+    <ProjectReference Include="..\MazeRecursion\MazeRecursion.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MazeFromFile">
