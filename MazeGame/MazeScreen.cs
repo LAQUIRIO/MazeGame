@@ -12,7 +12,7 @@ namespace MazeGame
     internal class MazeScreen : DrawableGameComponent
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly GraphicsDeviceManager _graphics;
+        private GraphicsDeviceManager _graphics;
         private readonly IMapProvider _mapProvider;
         private readonly int? _width, _heigth;
         private readonly int _texturesSize = 32;
@@ -25,14 +25,14 @@ namespace MazeGame
         private Texture2D _floor;
         private Texture2D _goal;
 
-        public MazeScreen(Game game, IMapProvider mapProvider, Action back, int? width, int? heigth) : base(game)
+        public MazeScreen(Game game, GraphicsDeviceManager graphicsDevice, IMapProvider mapProvider, Action back, int? width, int? heigth) : base(game)
         {
             this.game = game;
+            _graphics = graphicsDevice;
             _mapProvider = mapProvider;
             _back = back;
             _width = width;
             _heigth = heigth;
-
         }
 
 
