@@ -67,12 +67,18 @@ public class MazeGame : Game
         {
             if (_stateList[_gameState] == "Menu")
             {
-                _menuScreen = new MenuScreen(this, _graphics, LoadMaze);
+                _menuScreen.Reset();
+                if (_mazeScreen != null)
+                {
+                    Components.Remove(_mazeScreen);
+                    _mazeScreen.Dispose();
+                }
                 Components.Add(_menuScreen);
             }
             else if (_stateList[_gameState] == "Maze" && _mapProvider != null)
             {
                 _mazeScreen = new MazeScreen(this, _graphics, _mapProvider, Back, _width, _heigth);
+                Components.Remove(_menuScreen);
                 Components.Add(_mazeScreen);
             }
 
@@ -93,7 +99,6 @@ public class MazeGame : Game
             _previousGameState = _gameState;
             _gameState -= 1;
         }
-
     }
 }
 
