@@ -60,9 +60,7 @@ namespace MazeGame
 
         protected override void LoadContent()
         {
-
             _spriteBatch = new SpriteBatch(game.GraphicsDevice);
-            this.
             _goal = game.Content.Load<Texture2D>("Tree");
             _wall = game.Content.Load<Texture2D>("wall");
             _floor = game.Content.Load<Texture2D>("path");
@@ -86,6 +84,7 @@ namespace MazeGame
 
         private void DrawMap()
         {
+            //draw map from _map's block grid
             Block[,] grid = _map.MapGrid;
             _spriteBatch.Begin();
             for (int y = 0; y < grid.GetLength(0); y++)
@@ -94,11 +93,13 @@ namespace MazeGame
                 {
                     if (grid[y, x] == Block.Solid)
                     {
+                        //walls
                         logger.Debug($"Draw wall at {x},{y}");
                         _spriteBatch.Draw(_wall, new Vector2(x * _wall.Width, y * _wall.Height), Color.White);
                     }
                     else
                     {
+                        //floor
                         logger.Debug($"Draw path at {x},{y}");
                         _spriteBatch.Draw(_floor, new Vector2(x * _floor.Width, y * _floor.Height), Color.White);
                     }
@@ -107,6 +108,20 @@ namespace MazeGame
             _spriteBatch.Draw(_goal, new Vector2(_map.Goal.X * _goal.Width, _map.Goal.Y * _goal.Height), Color.White);
             _spriteBatch.End();
         }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _playerSprite.Dispose();
+                _spriteBatch.Dispose();
 
+                //texture dispose
+                _wall.Dispose();
+                _floor.Dispose();
+                _goal.Dispose();
+
+            }
+            base.Dispose(disposing);
+        }
     }
 }

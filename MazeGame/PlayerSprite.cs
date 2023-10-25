@@ -42,7 +42,6 @@ namespace MazeGame
             _oldPosition = new Vector2(_player.Position.X, _player.Position.Y);
             base.Initialize();
         }
-
         private Action PlayerMoved(Action playerAction) {
             return ()=>
             {
@@ -91,6 +90,20 @@ namespace MazeGame
         private float getStartingPoint(int position, int imgSize)
         {
             return (position) * imgSize + imgSize / 2;
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _inputManager.RemoveKeyHandler(Keys.Up, PlayerMoved(_player.MoveForward));
+                _inputManager.RemoveKeyHandler(Keys.Down, PlayerMoved(_player.MoveBackward));
+                _inputManager.RemoveKeyHandler(Keys.Left, PlayerMoved(_player.TurnLeft));
+                _inputManager.RemoveKeyHandler(Keys.Right, PlayerMoved(_player.TurnRight));
+                _spriteBatch.Dispose();
+                _texture.Dispose();
+                _floor.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
     }
