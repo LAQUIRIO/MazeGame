@@ -71,12 +71,12 @@ public class MazeGenerator : IMapProvider
 
     private bool DirectionISValid(MapVector newVect)
     {
-        return newVect.InsideBoundary(_directions!.GetLength(0), _directions.GetLength(1))&& !_path.Contains(newVect);
+        return newVect.InsideBoundary(_directions!.GetLength(1), _directions.GetLength(0))&& !_path.Contains(newVect);
     }
 
     public Direction[,] CreateMap(int width, int height)
     {
-        _directions = new Direction[width, height];
+        _directions = new Direction[height, width];
         if (_startingVector == null)
         {
             int x = _rand.Next(0, width);
