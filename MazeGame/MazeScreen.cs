@@ -112,13 +112,12 @@ namespace MazeGame
         {
             if (disposing)
             {
+                _map = null;
+                game.Components.Remove(this);
+                game.Components.Remove(_playerSprite);
                 _playerSprite.Dispose();
                 _spriteBatch.Dispose();
 
-                //texture dispose
-                _wall.Dispose();
-                _floor.Dispose();
-                _goal.Dispose();
 
             }
             base.Dispose(disposing);

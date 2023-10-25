@@ -95,13 +95,17 @@ namespace MazeGame
         {
             if (disposing)
             {
-                _inputManager.RemoveKeyHandler(Keys.Up, PlayerMoved(_player.MoveForward));
-                _inputManager.RemoveKeyHandler(Keys.Down, PlayerMoved(_player.MoveBackward));
-                _inputManager.RemoveKeyHandler(Keys.Left, PlayerMoved(_player.TurnLeft));
-                _inputManager.RemoveKeyHandler(Keys.Right, PlayerMoved(_player.TurnRight));
-                _spriteBatch.Dispose();
-                _texture.Dispose();
-                _floor.Dispose();
+                if (_inputManager != null)
+                {
+                    _inputManager.RemoveKeyHandler(Keys.Up, PlayerMoved(_player.MoveForward));
+                    _inputManager.RemoveKeyHandler(Keys.Down, PlayerMoved(_player.MoveBackward));
+                    _inputManager.RemoveKeyHandler(Keys.Left, PlayerMoved(_player.TurnLeft));
+                    _inputManager.RemoveKeyHandler(Keys.Right, PlayerMoved(_player.TurnRight));
+                }
+                if (_spriteBatch != null)
+                {
+                    _spriteBatch.Dispose();
+                }
             }
             base.Dispose(disposing);
         }

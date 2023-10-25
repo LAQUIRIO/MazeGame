@@ -18,9 +18,9 @@ public class MazeGame : Game
     private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private SpriteFont _font;
-    private readonly string[] _stateList = { "Menu", "Maze" };
+   /* private readonly string[] _stateList = { "Menu", "Maze" };
     private int _previousGameState = 0;
-    private int _gameState = 1;
+    private int _gameState = 1;*/
     private MenuScreen _menuScreen;
     private MazeScreen _mazeScreen;
     private IMapProvider _mapProvider;
@@ -90,20 +90,19 @@ public class MazeGame : Game
     protected void LoadMaze(IMapProvider mapProvider, int? width, int? heigth)
     {
         logger.Info($"left Main Menu");
-        _previousGameState = _gameState;
         _mapProvider = new MazeGenerator(null, null);
         _mazeScreen = new MazeScreen(this, _graphics, _mapProvider, Back, _width, _heigth);
-        Components.Remove(_menuScreen);
         Components.Add(_mazeScreen);
     }
     protected void Back()
     {
-        logger.Info($"left {_stateList[_gameState]} screen");
-        if (_gameState >0) 
-        { 
-            _previousGameState = _gameState;
-            _gameState -= 1;
-        }
+        _mazeScreen.Dispose();
+        _menuScreen = null;
+
+        if (_mazeScreen != null)
+        _mapProvider = new MazeGenerator(null, null);
+        _mazeScreen = new MazeScreen(this, _graphics, _mapProvider, Back, _width, _heigth);
+        Components.Add(_mazeScreen);
     }
 }
 
