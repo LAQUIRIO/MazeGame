@@ -20,7 +20,7 @@ public class MazeGame : Game
     private SpriteFont _font;
     private readonly string[] _stateList = { "Menu", "Maze" };
     private int _previousGameState = 0;
-    private int _gameState = 0;
+    private int _gameState = 1;
     private MenuScreen _menuScreen;
     private MazeScreen _mazeScreen;
     private IMapProvider _mapProvider;
@@ -35,8 +35,11 @@ public class MazeGame : Game
     protected override void Initialize()
     {
         base.Exiting += (sender, args) => logger.Info($"Game finished: game window is closed");
-        _menuScreen = new MenuScreen(this, _graphics, LoadMaze);
-        Components.Add(_menuScreen);
+        //_menuScreen = new MenuScreen(this, _graphics, LoadMaze);
+        //Components.Add(_menuScreen);
+        LoadMaze(_mapProvider, _width, _heigth);
+        Components.Remove(_mazeScreen);
+        Components.Add(_mazeScreen);
         base.Initialize();
     }
     private static IMapProvider SelectMap()
@@ -61,35 +64,37 @@ public class MazeGame : Game
         base.LoadContent();
     }
 
-    protected override void Update(GameTime gameTime)
+   /*protected override void Update(GameTime gameTime)
     {
         if (_previousGameState != _gameState)
         {
             if (_stateList[_gameState] == "Menu")
             {
-                _menuScreen.Reset();
+                _previousGameState = _gameState;
+                *//*_menuScreen.Reset();
                 if (_mazeScreen != null)
                 {
                     Components.Remove(_mazeScreen);
                     _mazeScreen.Dispose();
                 }
-                Components.Add(_menuScreen);
+                Components.Add(_menuScreen);*//*
+                LoadMaze(new MazeGenerator(null,null), 6, 8);
             }
             else if (_stateList[_gameState] == "Maze" && _mapProvider != null)
             {
-                _mazeScreen = new MazeScreen(this, _graphics, _mapProvider, Back, _width, _heigth);
-                Components.Remove(_menuScreen);
-                Components.Add(_mazeScreen);
             }
 
         }
         base.Update(gameTime);
-    }
+    }*/
     protected void LoadMaze(IMapProvider mapProvider, int? width, int? heigth)
     {
-        logger.Info($"left {_stateList[_gameState]} screen");
+        logger.Info($"left Main Menu");
         _previousGameState = _gameState;
-        _gameState = 1;
+        _mapProvider = new MazeGenerator(null, null);
+        _mazeScreen = new MazeScreen(this, _graphics, _mapProvider, Back, _width, _heigth);
+        Components.Remove(_menuScreen);
+        Components.Add(_mazeScreen);
     }
     protected void Back()
     {
