@@ -7,27 +7,24 @@ using Microsoft.Xna.Framework.Input;
 using NLog;
 using System.Windows.Forms;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
-using Color = Microsoft.Xna.Framework.Color;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace MazeGame;
 
+delegate void LoadMazeFunc(IMapProvider mapProvider, int? width, int? heigth);
 public class MazeGame : Game
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private IMap _map;
-    private MediaState gameState;
-    private PlayerSprite _playerSprite;
-    private Texture2D _wall;
-    private Texture2D _floor;
     private SpriteFont _font;
-    private Texture2D _goal;
-    private readonly int _texturesSize = 32;
-    private bool interfaceDrawn = false;
-    private int _menuIndex = 0;
-    private readonly string[] _menuItems = { "Start", "select Map Size", "Maze" };
+    private readonly string[] _stateList = { "Menu", "Maze" };
+    private int _previousGameState = 0;
+    private int _gameState = 0;
+    private MenuScreen _menuScreen;
+    private MazeScreen _mazeScreen;
+    private IMapProvider _mapProvider;
+    private int? _width, _heigth;
     public MazeGame()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -37,17 +34,9 @@ public class MazeGame : Game
 
     protected override void Initialize()
     {
-        IMapProvider mapProvider = new MazeGenerator(new MapVector(0,0), 1);
-        _map = new Map(mapProvider);
-        _map.CreateMap(4, 4);
-
         base.Exiting += (sender, args) => logger.Info($"Game finished: game window is closed");
-        logger.Info($"Player's starting position: x={_map.Player.StartX}, y={_map.Player.StartY}");
-        logger.Info($"Goal's position: x={_map.Goal.X}, y={_map.Goal.Y}");
-
-
-        _playerSprite = new PlayerSprite(this, _map.Player);
-        this.Components.Add(_playerSprite);
+        _menuScreen = new MenuScreen(this, _graphics, LoadMaze);
+        Components.Add(_menuScreen);
         base.Initialize();
     }
     private static IMapProvider SelectMap()
@@ -68,24 +57,44 @@ public class MazeGame : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        this.
-        _goal = Content.Load<Texture2D>("Tree");
-        _wall = Content.Load<Texture2D>("wall");
-        _floor = Content.Load<Texture2D>("path");
         _font = Content.Load<SpriteFont>("font");
-        //DrawMap();
         base.LoadContent();
     }
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-        { 
-            logger.Info("Game finished: player has quit");
-            Exit();
-        }
+        if (_previousGameState != _gameState)
+        {
+            if (_stateList[_gameState] == "Menu")
+            {
+                _menuScreen = new MenuScreen(this, _graphics, LoadMaze);
+                Components.Add(_menuScreen);
+            }
+            else if (_stateList[_gameState] == "Maze" && _mapProvider != null)
+            {
+                _mazeScreen = new MazeScreen(this, _graphics, _mapProvider, Back, _width, _heigth);
+                Components.Add(_mazeScreen);
+            }
 
+        }
         base.Update(gameTime);
     }
+    protected void LoadMaze(IMapProvider mapProvider, int? width, int? heigth)
+    {
+        logger.Info($"left {_stateList[_gameState]} screen");
+        _previousGameState = _gameState;
+        _gameState = 1;
+    }
+    protected void Back()
+    {
+        logger.Info($"left {_stateList[_gameState]} screen");
+        if (_gameState >0) 
+        { 
+            _previousGameState = _gameState;
+            _gameState -= 1;
+        }
+
+    }
+}
 
 
