@@ -1,19 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using MazeRecursion;
-using SharpDX.XInput;
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 using NLog;
 using Maze;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MazeGame
 {
@@ -127,7 +119,6 @@ namespace MazeGame
             }
             base.Dispose(disposing);
         }
-
         public override void Update(GameTime gameTime)
         {
 
@@ -159,13 +150,10 @@ namespace MazeGame
 
             base.Draw(gameTime);
         }
-
-
         private void DrawText(string text, Vector2 vector, Color color)
         {
             _spriteBatch.DrawString(_font, text.Replace('_',' '), vector, color);
         }
-
         private static IMapProvider SelectMap()
         {
             string path = "";
