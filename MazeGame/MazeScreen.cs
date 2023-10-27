@@ -70,13 +70,14 @@ namespace MazeGame
         public override void Update(GameTime gameTime)
         {
             _playerSprite.Update(gameTime);
-            if (_map.IsGameFinished)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                {
-                    logger.Info("Game finished: player has quit");
-                    game.Exit();
-                }
+                logger.Info("Game finished: player has quit");
+                _back();
+            }
+
+            else if (_map.IsGameFinished)
+            {
                 logger.Info("Game finished: player has reached the goal");
                 _back();
             }
