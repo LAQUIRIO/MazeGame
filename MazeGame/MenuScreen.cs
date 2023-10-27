@@ -84,10 +84,18 @@ namespace MazeGame
             switch (_selectedText)
             {
                 case MainMenuText.Recursive_Generator:
-                    _state = MenuState.SizeMenu;
+                    _screenState = typeof(SizeMenuText);
+                    _selectedText = SizeMenuText.Width;
                     break;
                 case MainMenuText.Select_Maze_From_File:
                     _loadMaze(SelectMap(), null, null);
+                    break;
+                case SizeMenuText.Generate_Maze:
+                    _loadMaze(new MazeGenerator(null, null), _width, _height);
+                    break;
+                case SizeMenuText.Exit:
+                    _screenState = typeof(MainMenuText);
+                    _selectedText = MainMenuText.Recursive_Generator;
                     break;
                 case MainMenuText.Exit:
                     _game.Exit();
