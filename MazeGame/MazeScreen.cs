@@ -116,9 +116,14 @@ namespace MazeGame
                 _map = null;
                 game.Components.Remove(this);
                 game.Components.Remove(_playerSprite);
-                _playerSprite.Dispose();
-                _spriteBatch.Dispose();
-
+                if (_playerSprite != null)
+                {
+                    _playerSprite.Dispose();
+                }
+                if (_spriteBatch != null) 
+                {
+                    _spriteBatch.Dispose(); 
+                }
 
             }
             base.Dispose(disposing);
