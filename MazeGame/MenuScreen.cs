@@ -63,6 +63,11 @@ namespace MazeGame
             _inputManager.AddKeyHandler(Keys.Up, SelectAbove);
             _inputManager.AddKeyHandler(Keys.Down, SelectBelow);
             _inputManager.AddKeyHandler(Keys.Enter, Select);
+
+            _graphics.PreferredBackBufferWidth =  900;
+            _graphics.PreferredBackBufferHeight = 650;
+            _graphics.ApplyChanges();
+
             base.Initialize();
         }
 
