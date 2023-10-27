@@ -28,6 +28,7 @@ namespace MazeGame
         public void Update()
         {
             KeyboardState state = Keyboard.GetState();
+            Dictionary<Keys, Action> keys = new Dictionary<Keys, Action>(this.keys);
             if (instance != null) {
                 foreach (var key in keys)
                 {
@@ -50,6 +51,21 @@ namespace MazeGame
                 else
                 {
                     keys.Add(key, action);
+                }
+            }
+        }
+        
+        public void RemoveKeyHandler(Keys key, Action action)
+        {
+            if (instance != null)
+            {
+                if (keys.ContainsKey(key))
+                {
+                    keys[key] -= action;
+                    if (keys[key] == null)
+                    {
+                        keys.Remove(key);
+                    }
                 }
             }
         }
