@@ -13,13 +13,16 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 using NLog;
 using Maze;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MazeGame
 {
-    enum MenuState
+    enum SizeMenuText
     {
-        MainMenu,
-        SizeMenu
+        Width,
+        Height,
+        Generate_Maze,
+        Exit
     }
     enum MainMenuText
     {
@@ -33,14 +36,14 @@ namespace MazeGame
         private readonly LoadMazeFunc _loadMaze;
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly Game _game;
-        private MenuState _state;
-        private MainMenuText? _selectedText;
-        private MainMenuText? _previouslySelectedText;
+        private Enum? _selectedText;
+        private Enum? _previouslySelectedText;
         private SpriteBatch _spriteBatch;
         private InputManager _inputManager;
         private SpriteFont _font;
-
-        private MenuState _screenState = MenuState.MainMenu;
+        private int? _width, _height;
+        
+        private Type _screenState = typeof(MainMenuText);
 
         public static object logger { get; private set; }
 
