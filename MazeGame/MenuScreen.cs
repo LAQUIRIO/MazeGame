@@ -117,9 +117,15 @@ namespace MazeGame
             _font = _game.Content.Load<SpriteFont>("font");
             base.LoadContent();
         }
-        internal void Reset()
+        protected override void Dispose(bool disposing)
         {
-            throw new NotImplementedException();
+            if (disposing)
+            {
+                _inputManager.RemoveKeyHandler(Keys.Up, SelectAbove);
+                _inputManager.RemoveKeyHandler(Keys.Down, SelectBelow);
+                _inputManager.RemoveKeyHandler(Keys.Enter, Select);
+            }
+            base.Dispose(disposing);
         }
 
         public override void Update(GameTime gameTime)
