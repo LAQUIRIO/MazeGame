@@ -104,11 +104,12 @@ namespace MazeGame
         }
         public void ChangeSelectedText(int moveDirection)
         {
-            int selectedText = (int)_selectedText;
-            int numberOfTexts = Enum.GetNames(typeof(MainMenuText)).Length;
+            int selectedText = (int)Enum.ToObject(_screenState, _selectedText);
+            int numberOfTexts = Enum.GetNames(_screenState).Length;
             if (numberOfTexts > selectedText + moveDirection && selectedText + moveDirection >= 0)
             {
-                _selectedText = (MainMenuText)(selectedText + moveDirection);
+                Array enumValues = Enum.GetValues(_screenState);
+                _selectedText = (Enum)enumValues.GetValue(selectedText + moveDirection);
             }
         }
         protected override void LoadContent()
@@ -133,26 +134,27 @@ namespace MazeGame
             {
                 GraphicsDevice.Clear(Color.Black);
                 _spriteBatch.Begin();
-                DrawText("Maze Game", new Vector2(100, 50), Color.White);   
-                for (int i = 0; i < Enum.GetNames(typeof(MainMenuText)).Length; i++)
+                DrawText("Maze Game", new Vector2(100, 100), Color.White);
+                foreach (var enumValue in Enum.GetValues(_selectedText.GetType()))
                 {
-                    Vector2 textPlacement = new Vector2(100, 110 + 60 * i);
-                    if (_selectedText == (MainMenuText)i)
+                    Vector2 textPlacement = new Vector2(100, 200 + 100 * (int)enumValue + 1);
+                    if (enumValue.Equals(_selectedText))
                     {
-                        DrawText(Enum.GetName(typeof(MainMenuText), i), textPlacement, Color.Red);
+                        DrawText(Enum.GetName(_screenState, enumValue), textPlacement, Color.Red);
                     }
                     else
                     {
-                        DrawText(Enum.GetName(typeof(MainMenuText), i), textPlacement, Color.White);
+                        DrawText(Enum.GetName(_screenState, enumValue), textPlacement, Color.White);
                     }
                 }
                 _spriteBatch.End();
                 _previouslySelectedText = _selectedText;
             }
 
-
             base.Draw(gameTime);
         }
+
+
         private void DrawText(string text, Vector2 vector, Color color)
         {
             _spriteBatch.DrawString(_font, text.Replace('_',' '), vector, color);
