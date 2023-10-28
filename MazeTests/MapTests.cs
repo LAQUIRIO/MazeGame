@@ -29,7 +29,6 @@ namespace Maze.Tests
             }
         }
 
-
         [TestMethod()]
         public void MapTest()
         {
@@ -89,12 +88,23 @@ namespace Maze.Tests
         }
         //TODO: implement tests for CreateMapTest and SaveDirectionMapTest
         [TestMethod()]
-        [ExpectedException(typeof(NotImplementedException))]
-        public void CreateMapTest1()
+        [DataRow(5, 5)]
+        [DataRow(10, 10)]
+        [DataRow(9, 10)]
+        [DataRow(10, 7)]
+        public void CreateMapTestWithValues(int width, int height)
         {
-            loadMapProvider(null);
+            Direction[,] directions = new Direction[height, width];
+            directions.SetValue(Direction.W, 0, 0);
+            directions.SetValue(Direction.E, 0, 1);
+            Block[,] expected = new Block[height*2+1, width*2+1];
+            mapProvider.Setup(map => map.CreateMap(width, height)).Returns(directions);
             Map map = new Map(mapProvider.Object);
-            map.CreateMap(1,2);
+            map.CreateMap(width, height);
+            Assert.AreEqual(height*2+1, map.Height);
+            Assert.AreEqual(width*2+1, map.Width);
+            Assert.AreEqual(expected.GetLength(0), map.MapGrid.GetLength(0));
+            Assert.AreEqual(expected.GetLength(1), map.MapGrid.GetLength(1));
         }
 
         [TestMethod()]
