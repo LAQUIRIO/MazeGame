@@ -51,6 +51,8 @@ namespace MazeGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _selectedText = MainMenuText.Recursive_Generator;
             _previouslySelectedText = null;
+            _height = _minDimension;
+            _width = _minDimension;
             
             _inputManager.AddKeyHandler(Keys.Up, SelectAbove);
             _inputManager.AddKeyHandler(Keys.Down, SelectBelow);
@@ -94,6 +96,49 @@ namespace MazeGame
                     break;
             }
         }
+
+        public void SetSizeMenuKeys()
+        {
+            _inputManager.AddKeyHandler(Keys.Left, LowerDimension);
+            _inputManager.AddKeyHandler(Keys.Right, RiseDimension);
+        }
+        private void RemoveSizeMenuKeys()
+        {
+            _inputManager.RemoveKeyHandler(Keys.Left, LowerDimension);
+            _inputManager.RemoveKeyHandler(Keys.Right, RiseDimension);
+        }
+        public void LowerDimension()
+        {
+            UpdateDimension(-2);
+        } 
+        public void RiseDimension()
+        {
+            UpdateDimension(+2);
+        }
+        private void UpdateDimension(int direction)
+        {
+            if (_selectedText.Equals(SizeMenuText.Width))
+            {
+                if (validSize(_width+direction))
+                {
+                    _width += direction;
+                }
+            }
+            else if (_selectedText.Equals(SizeMenuText.Height))
+            {
+                if (validSize(_height+direction))
+                {
+                    _height += direction;
+                }
+            }
+            _dimensionChnage = true;
+        }
+
+        private bool validSize(int size)
+        {
+            return size >= _minDimension && size <= _maxDimension;
+        }
+
         public void ChangeSelectedText(int moveDirection)
         {
             int selectedText = (int)Enum.ToObject(_screenState, _selectedText);
