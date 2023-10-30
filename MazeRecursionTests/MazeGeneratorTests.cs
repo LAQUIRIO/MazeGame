@@ -69,5 +69,23 @@ namespace MazeRecursion.Tests
             }
         }
 
+        [TestMethod()]
+        [DataRow(5, 5)]
+        [DataRow(10, 10)]
+        [DataRow(15, 15)]
+        [DataRow(20, 10)]
+        [DataRow(10, 20)]
+        public void RandomMapGenerationTest(int with, int height)
+        {
+            _mapProvider = new MazeGenerator(null, null);
+            Direction[,] directions = _mapProvider.CreateMap(with, height);
+            Assert.AreEqual(with, directions.GetLength(1));
+            Assert.AreEqual(height, directions.GetLength(0));
+            foreach (Direction dir in directions)
+            {
+                Assert.IsTrue(dir != Direction.None);
+            }
+        }
+
     }
 }
