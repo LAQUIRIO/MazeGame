@@ -79,16 +79,24 @@ namespace MazeGame
             {
                 case MainMenuText.Recursive_Generator:
                     _screenState = typeof(SizeMenuText);
+                    SetSizeMenuKeys();
                     _selectedText = SizeMenuText.Width;
                     break;
                 case MainMenuText.Select_Maze_From_File:
-                    _loadMaze(SelectMap(), null, null);
-                    break;
+                    try
+                    {
+                        _loadMaze(SelectMap(), null, null);
+                    }catch(Exception e)
+                    { 
+                    _logger.Debug(e.Message);
+                    }
+                        break;
                 case SizeMenuText.Generate_Maze:
-                    _loadMaze(new MazeGenerator(null, null), _width, _height);
+                    _loadMaze(new MazeGenerator(null, null), (_width-1)/2, (_height-1)/2);
                     break;
                 case SizeMenuText.Exit:
                     _screenState = typeof(MainMenuText);
+                    RemoveSizeMenuKeys();
                     _selectedText = MainMenuText.Recursive_Generator;
                     break;
                 case MainMenuText.Exit:
@@ -161,6 +169,7 @@ namespace MazeGame
                 _inputManager.RemoveKeyHandler(Keys.Up, SelectAbove);
                 _inputManager.RemoveKeyHandler(Keys.Down, SelectBelow);
                 _inputManager.RemoveKeyHandler(Keys.Enter, Select);
+                RemoveSizeMenuKeys();
             }
             base.Dispose(disposing);
         }
@@ -172,7 +181,7 @@ namespace MazeGame
         }
         public override void Draw(GameTime gameTime)
         {
-            if (_selectedText != _previouslySelectedText)
+            if (_selectedText != _previouslySelectedText || _dimensionChnage)
             {
                 GraphicsDevice.Clear(Color.Black);
                 _spriteBatch.Begin();
