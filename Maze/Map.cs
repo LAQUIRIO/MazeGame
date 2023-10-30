@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Maze
+﻿namespace Maze
 {
     public class Map : IMap
     {
-        private Random _rand = new ();
+        
+        private readonly Random _rand = new ();
         private readonly IMapProvider _mapProvider;
         private Direction[,] _directionMap;
         public IMapVector Goal { get; private set; }
@@ -126,7 +119,7 @@ namespace Maze
         }
 
         public void SaveDirectionMap(string path)
-        {
+        {   
             throw new NotImplementedException();
         }
     }
