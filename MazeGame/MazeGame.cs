@@ -1,7 +1,5 @@
 ﻿using Maze;
-using MazeRecursion;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using NLog;
 
 namespace MazeGame;
@@ -13,7 +11,6 @@ public class MazeGame : Game
     private readonly GraphicsDeviceManager _graphics;
     private MenuScreen _menuScreen;
     private MazeScreen _mazeScreen;
-    private IMapProvider _mapProvider;
     public MazeGame()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -35,8 +32,7 @@ public class MazeGame : Game
     protected void LoadMaze(IMapProvider mapProvider, int? width, int? height)
     {
         logger.Info($"left Main Menu");
-        _mapProvider = new MazeGenerator(null, null);
-        _mazeScreen = new MazeScreen(this, _graphics, _mapProvider, Back, height, width);
+        _mazeScreen = new MazeScreen(this, _graphics, mapProvider, Back, width, height);
         Components.Remove(_menuScreen);
         _menuScreen.Dispose();
         Components.Add(_mazeScreen);
