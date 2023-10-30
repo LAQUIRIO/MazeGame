@@ -32,8 +32,8 @@ public class MazeGenerator : IMapProvider
 
         foreach (var dir in dirs)
         {
-            if (DirectionISValid(providedVect+dir))
-            { 
+            if (DirectionISValid(providedVect + dir))
+            {
                 _directions[providedVect.Y, providedVect.X] |= dir;
                 MapVector newVect = providedVect + dir;
                 _directions[newVect.Y, newVect.X] |= GetOppositeDir(dir);
@@ -71,7 +71,7 @@ public class MazeGenerator : IMapProvider
 
     private bool DirectionISValid(MapVector newVect)
     {
-        return newVect.InsideBoundary(_directions!.GetLength(1), _directions.GetLength(0))&& !_path.Contains(newVect);
+        return newVect.InsideBoundary(_directions!.GetLength(1), _directions.GetLength(0)) && !_path.Contains(newVect);
     }
 
     public Direction[,] CreateMap(int width, int height)
