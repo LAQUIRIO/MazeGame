@@ -1,6 +1,7 @@
 ﻿using Maze;
 using Microsoft.Xna.Framework;
 using NLog;
+using System;
 
 namespace MazeGame;
 
@@ -32,10 +33,21 @@ public class MazeGame : Game
     protected void LoadMaze(IMapProvider mapProvider, int? width, int? height)
     {
         logger.Info($"left Main Menu");
-        _mazeScreen = new MazeScreen(this, _graphics, mapProvider, Back, width, height);
-        Components.Remove(_menuScreen);
-        _menuScreen.Dispose();
-        Components.Add(_mazeScreen);
+        try
+        {
+            _mazeScreen = new MazeScreen(this, _graphics, mapProvider, Back, width, height);
+            Components.Remove(_menuScreen);
+            _menuScreen.Dispose();
+            Components.Add(_mazeScreen);
+        }catch (Exception e)
+        {
+            logger.Error(e.Message);
+            _mazeScreen.Dispose();
+            Components.Remove(_mazeScreen);
+            _menuScreen = new MenuScreen(this, _graphics, LoadMaze);
+            _menuScreen.errorMessage = "Maze Map invalid";
+            Components.Add(_menuScreen);
+        }
     }
     protected void Back()
     {

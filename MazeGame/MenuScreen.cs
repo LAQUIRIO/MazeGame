@@ -24,21 +24,30 @@ namespace MazeGame
     }
     internal class MenuScreen : DrawableGameComponent
     {
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly int _maxDimension = 25;
+        private readonly int _minDimension = 5;
         private readonly GraphicsDeviceManager _graphics;
         private readonly LoadMazeFunc _loadMaze;
-        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly Game _game;
+        private bool _dimensionChange;
+        private int _width, _height;
+        private InputManager _inputManager;
+        private SpriteBatch _spriteBatch;
+        private SpriteFont _font;
         private Enum _selectedText;
         private Enum _previouslySelectedText;
-        private SpriteBatch _spriteBatch;
-        private InputManager _inputManager;
-        private SpriteFont _font;
-        private int _width, _height;
-        private bool _dimensionChange;
         private Type _screenState = typeof(MainMenuText);
-        private readonly int _minDimension = 5;
-        private readonly int _maxDimension = 25;
-
+        private string _errorMessage = "";
+        public string errorMessage
+        {
+            get { return _errorMessage; }
+            set
+            {
+                _errorMessage = value;
+                _dimensionChange = true;
+            }
+        }
         public MenuScreen(Game game, GraphicsDeviceManager graphicsDevice, LoadMazeFunc loadMaze) : base(game)
         {
             _game = game;
@@ -181,14 +190,21 @@ namespace MazeGame
         }
         public override void Draw(GameTime gameTime)
         {
-            if (_selectedText != _previouslySelectedText || _dimensionChange)
+            if (_selectedText != _previouslySelectedText || _dimensionChange || _errorMessage != "")
             {
                 GraphicsDevice.Clear(Color.Black);
                 _spriteBatch.Begin();
-                DrawText("Maze Game", new Vector2(100, 100), Color.White);
+                int x = 100, y = 100;
+                if (_errorMessage != "")
+                {
+                    DrawText(_errorMessage, new Vector2(x, y), Color.Red);
+                    y += 100;
+                }
+                DrawText("Maze Game", new Vector2(x, y), Color.White);
                 foreach (var enumValue in Enum.GetValues(_selectedText.GetType()))
                 {
-                    Vector2 textPlacement = new Vector2(100, 200 + 100 * (int)enumValue + 1);
+                    y += 100;
+                    Vector2 textPlacement = new Vector2(100, y);
                     string text = Enum.GetName(_screenState, enumValue);
                     if (enumValue.Equals(SizeMenuText.Width))
                     {
@@ -200,7 +216,7 @@ namespace MazeGame
                     }
                     if (enumValue.Equals(_selectedText))
                     {
-                        DrawText(text, textPlacement, Color.Red);
+                        DrawText(text, textPlacement, Color.Blue);
                     }
                     else
                     {
@@ -210,6 +226,7 @@ namespace MazeGame
                 _spriteBatch.End();
                 _previouslySelectedText = _selectedText;
                 _dimensionChange = false;
+                _errorMessage = "";
             }
 
             base.Draw(gameTime);
