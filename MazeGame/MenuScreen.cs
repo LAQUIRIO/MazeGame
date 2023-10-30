@@ -34,7 +34,7 @@ namespace MazeGame
         private InputManager _inputManager;
         private SpriteFont _font;
         private int _width, _height;
-        private bool _dimensionChnage;
+        private bool _dimensionChange;
         private Type _screenState = typeof(MainMenuText);
         private readonly int _minDimension = 5;
         private readonly int _maxDimension = 25;
@@ -139,7 +139,7 @@ namespace MazeGame
                     _height += direction;
                 }
             }
-            _dimensionChnage = true;
+            _dimensionChange = true;
         }
 
         private bool validSize(int size)
@@ -181,7 +181,7 @@ namespace MazeGame
         }
         public override void Draw(GameTime gameTime)
         {
-            if (_selectedText != _previouslySelectedText || _dimensionChnage)
+            if (_selectedText != _previouslySelectedText || _dimensionChange)
             {
                 GraphicsDevice.Clear(Color.Black);
                 _spriteBatch.Begin();
@@ -209,7 +209,7 @@ namespace MazeGame
                 }
                 _spriteBatch.End();
                 _previouslySelectedText = _selectedText;
-                _dimensionChnage = false;
+                _dimensionChange = false;
             }
 
             base.Draw(gameTime);
