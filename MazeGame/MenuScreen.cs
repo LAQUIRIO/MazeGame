@@ -189,17 +189,27 @@ namespace MazeGame
                 foreach (var enumValue in Enum.GetValues(_selectedText.GetType()))
                 {
                     Vector2 textPlacement = new Vector2(100, 200 + 100 * (int)enumValue + 1);
+                    string text = Enum.GetName(_screenState, enumValue);
+                    if (enumValue.Equals(SizeMenuText.Width))
+                    {
+                        text += $" {_width}";
+                    }
+                    else if (enumValue.Equals(SizeMenuText.Height))
+                    {
+                        text += $" {_height}";
+                    }
                     if (enumValue.Equals(_selectedText))
                     {
-                        DrawText(Enum.GetName(_screenState, enumValue), textPlacement, Color.Red);
+                        DrawText(text, textPlacement, Color.Red);
                     }
                     else
                     {
-                        DrawText(Enum.GetName(_screenState, enumValue), textPlacement, Color.White);
+                        DrawText(text, textPlacement, Color.White);
                     }
                 }
                 _spriteBatch.End();
                 _previouslySelectedText = _selectedText;
+                _dimensionChnage = false;
             }
 
             base.Draw(gameTime);
