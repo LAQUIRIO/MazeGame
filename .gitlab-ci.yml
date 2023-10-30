@@ -3,11 +3,19 @@ default:
 
 build-debug:
     stage: build
+    before_script:
+        - apt-get update -y
+        - apt-get install zip -y
+        - apt-get install libfreetype6 -y
     script:
     - dotnet build -c Debug
 
 build-release:
     stage: build
+    before_script:
+        - apt-get update -y
+        - apt-get install zip -y
+        - apt-get install libfreetype6 -y
     script:
     - dotnet build -c Release 
 
@@ -29,6 +37,7 @@ deploy:
     script:
         - apt-get update -y
         - apt-get install zip -y
+        - apt-get install libfreetype6 -y
         - dotnet publish -c Release -r win-x64 -o ./MazeGame /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained
         - zip -r MazeGame.zip ./MazeGame
     artifacts:
