@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Maze
+﻿namespace Maze
 {
     public class Player : IPlayer
     {
@@ -49,10 +43,6 @@ namespace Maze
 
         private bool IsMoveValid(MapVector position)
         {
-            if (_MapGrid == null)
-            {
-                return false;
-            }
             return _MapGrid[position.Y,position.X] == Block.Empty;
             
         }
