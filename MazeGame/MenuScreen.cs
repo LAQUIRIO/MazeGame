@@ -28,16 +28,16 @@ namespace MazeGame
         private readonly LoadMazeFunc _loadMaze;
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly Game _game;
-        private Enum? _selectedText;
-        private Enum? _previouslySelectedText;
+        private Enum _selectedText;
+        private Enum _previouslySelectedText;
         private SpriteBatch _spriteBatch;
         private InputManager _inputManager;
         private SpriteFont _font;
-        private int? _width, _height;
-        
+        private int _width, _height;
+        private bool _dimensionChnage;
         private Type _screenState = typeof(MainMenuText);
-
-        public static object logger { get; private set; }
+        private readonly int _minDimension = 5;
+        private readonly int _maxDimension = 25;
 
         public MenuScreen(Game game, GraphicsDeviceManager graphicsDevice, LoadMazeFunc loadMaze) : base(game)
         {
