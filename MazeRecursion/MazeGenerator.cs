@@ -20,10 +20,10 @@ public class MazeGenerator : IMapProvider
             _rand = new Random();
         }
     }
-     
+
     private void Walk(MapVector providedVect)
     {
-        if (_directions == null ||_directions.Length <= _path.Count)
+        if (_directions!.Length <= _path.Count)
         {
             return;
         }
