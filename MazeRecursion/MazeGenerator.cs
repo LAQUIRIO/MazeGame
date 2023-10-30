@@ -4,7 +4,7 @@ using Maze;
 public class MazeGenerator : IMapProvider
 {
     private Direction[,]? _directions;
-    private List<MapVector> _path;
+    private readonly List<MapVector> _path;
     private readonly Random _rand;
     private MapVector? _startingVector;
     public MazeGenerator(MapVector? startingVector, int? randomSeed)
