@@ -1,10 +1,13 @@
-﻿namespace Maze
+﻿using NLog;
+
+namespace Maze
 {
     public class Map : IMap
     {
         
         private readonly Random _rand = new ();
         private readonly IMapProvider _mapProvider;
+        private readonly Logger log = LogManager.GetCurrentClassLogger();
         private Direction[,] _directionMap;
         public IMapVector Goal { get; private set; }
         public int Height { 
@@ -31,14 +34,18 @@
         private void PlacePlayer()
         {
             int y=0, x =0;
-            while (MapGrid[y,x]==Block.Solid)
+            if (MapGrid.Cast<Block>().ToList().Any(b => b == Block.Empty))
             {
-                y = _rand.Next(0, MapGrid.GetLength(0));
-                x = _rand.Next(0, MapGrid.GetLength(1));
-
+                while (MapGrid[y, x] == Block.Solid)
+                {
+                    y = _rand.Next(0, MapGrid.GetLength(0));
+                    x = _rand.Next(0, MapGrid.GetLength(1));
+                }
+                Player = new Player(MapGrid, Direction.N, x, y);
+            }else
+            {
+                throw new Exception("Map is full of walls");
             }
-            Player = new Player(MapGrid,Direction.N,x,y);
-
         }
         private void SelectGoal()
         {
@@ -75,9 +82,12 @@
 
         public void CreateMap()
         {
+            log.Debug("CreateMap()");
             _directionMap = _mapProvider.CreateMap();
+            log.Debug("CreateMap() _directionMap created");
             MapGrid = new Block[_directionMap.GetLength(0) * 2 + 1, _directionMap.GetLength(1) * 2 + 1];
             Initializer();
+            log.Debug("CreateMap() finished");
         }
 
         public void CreateMap(int width, int height)
