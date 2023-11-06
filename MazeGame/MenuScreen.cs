@@ -101,7 +101,7 @@ namespace MazeGame
                     }
                         break;
                 case SizeMenuText.Generate_Maze:
-                    _loadMaze(new MazeGenerator(null, null), (_width-1)/2, (_height-1)/2);
+                    _loadMaze(new RecursiveMazeGenerator(null, null), (_width-1)/2, (_height-1)/2);
                     break;
                 case SizeMenuText.Exit:
                     _screenState = typeof(MainMenuText);
