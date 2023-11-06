@@ -100,10 +100,10 @@ public class MazeHuntKillGenerator : IMapProvider
 
     public Direction[,] CreateMap(int width, int height)
     {
-        _map = new Direction[width, height];
+        _map = new Direction[height, width];
         if (_startingVector == null)
         {
-            _startingVector = new MapVector(_rand.Next(0, width), _rand.Next(0, height));
+            _startingVector = new MapVector(_rand.Next(0, width-1), _rand.Next(0, height-1));
         }
         MapVector? currentVector = _startingVector!;
         while (currentVector != null)
