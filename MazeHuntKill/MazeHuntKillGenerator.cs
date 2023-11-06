@@ -77,15 +77,17 @@ public class MazeHuntKillGenerator : IMapProvider
     private Direction[] GetPossiblePosition(MapVector vector, IsValid isValid)
     {
         List<Direction> possibleDirections = new List<Direction>();
+        Direction[] directions = { Direction.N, Direction.S, Direction.E, Direction.W };
 
-        foreach (Direction dir in Enum.GetValues(typeof(Direction)))
+        foreach (Direction dir in directions)
         {
-            if (vector.X > 0 && vector.Y > 0 && vector.X < _map.GetLength(1)-1 && vector.Y < _map.GetLength(0) && isValid(vector + dir))
+            MapVector tempVector = vector + dir;
+            if (tempVector.X >= 0 && tempVector.Y >= 0 && tempVector.X < _map.GetLength(1) && tempVector.Y < _map.GetLength(0) && isValid(tempVector))
             {
                 possibleDirections.Add(dir);
             }
         }
-        return possibleDirections.ToArray();
+        return possibleDirections.OrderBy(item => _rand.Next()).ToArray();
     }
     private bool DirectionIsValidForHunt(MapVector vector)
     {
