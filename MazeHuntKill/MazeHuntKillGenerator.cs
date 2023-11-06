@@ -28,7 +28,20 @@ public class MazeHuntKillGenerator : IMapProvider
         _map[newVector.X, newVector.Y] |= GetOppositeDirection(direction);
         return newVector;
     }
-
+    private MapVector? Hunt()
+    {
+        for (int y = 0; y < _map.GetLength(1); y++)
+        {
+            for (int x = 0; x < _map.GetLength(0); x++)
+            {
+                if (_map[y, x] == Direction.None)
+                {
+                    return new MapVector(x, y);
+                }
+            }
+        }
+        return null;
+    }
     private Direction GetOppositeDirection(Direction dir)
     {
         return dir switch
@@ -69,14 +82,14 @@ public class MazeHuntKillGenerator : IMapProvider
         {
             _startingVector = new MapVector(_rand.Next(0, width), _rand.Next(0, height));
         }
-        MapVector currentVector = _startingVector!;
-        while (_map.Cast<Direction>().Any(dir => dir == Direction.None))
+        MapVector? currentVector = _startingVector!;
+        while (currentVector != null)
         {
             while (getPossiblePosition(currentVector).Length > 0)
             {
                 currentVector = Walking(currentVector);
             }
-            Hunt();
+            currentVector = Hunt();
         }
         return _map;
     }
