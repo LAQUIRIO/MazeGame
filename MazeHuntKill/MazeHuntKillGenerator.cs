@@ -8,7 +8,7 @@ public class MazeHuntKillGenerator : IMapProvider
 {
     private readonly Random _rand;
     private MapVector? _startingVector;
-    private Direction[,] _map;
+    private Direction[,]? _map;
 
     public MazeHuntKillGenerator(MapVector? startingVector, int? seed)
     {
