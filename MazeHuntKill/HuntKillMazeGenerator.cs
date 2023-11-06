@@ -1,13 +1,13 @@
 ﻿using Maze;
 using System.Linq;
 namespace MazeHuntKill;
-public class HuntKillMazeGenerator : IMapProvider
+public class MazeHuntKillGenerator : IMapProvider
 {
     private readonly Random _rand;
     private MapVector? _startingVector;
     private Direction[,] _map;
 
-    public HuntKillMazeGenerator(MapVector? startingVector, int? seed)
+    public MazeHuntKillGenerator(MapVector? startingVector, int? seed)
     {
         _startingVector = startingVector;
         if (seed.HasValue)
@@ -64,7 +64,21 @@ public class HuntKillMazeGenerator : IMapProvider
 
     public Direction[,] CreateMap(int width, int height)
     {
-        throw new NotImplementedException();
+        _map = new Direction[width, height];
+        if (_startingVector == null)
+        {
+            _startingVector = new MapVector(_rand.Next(0, width), _rand.Next(0, height));
+        }
+        MapVector currentVector = _startingVector!;
+        while (_map.Cast<Direction>().Any(dir => dir == Direction.None))
+        {
+            while (getPossiblePosition(currentVector).Length > 0)
+            {
+                currentVector = Walking(currentVector);
+            }
+            Hunt();
+        }
+        return _map;
     }
 
     public Direction[,] CreateMap()
