@@ -1,6 +1,9 @@
 ﻿using Maze;
 using System.Linq;
+using System.Numerics;
+
 namespace MazeHuntKill;
+delegate bool IsValid(MapVector vector);
 public class MazeHuntKillGenerator : IMapProvider
 {
     private readonly Random _rand;
@@ -21,7 +24,7 @@ public class MazeHuntKillGenerator : IMapProvider
     }
     private MapVector Walking(MapVector currentVector)
     {
-        Direction[] possibleDirections = getPossiblePosition(currentVector);
+        Direction[] possibleDirections = GetPossiblePosition(currentVector, DirectionIsValidForWalk);
         Direction direction = possibleDirections[_rand.Next(0, possibleDirections.Length)];
         _map[currentVector.X, currentVector.Y] |= direction;
         MapVector newVector = currentVector + direction;
@@ -34,15 +37,20 @@ public class MazeHuntKillGenerator : IMapProvider
         {
             for (int x = 0; x < _map.GetLength(0); x++)
             {
+                MapVector vector = new MapVector(x, y);
                 if (_map[y, x] == Direction.None)
                 {
-                    return new MapVector(x, y);
+                    Direction[] possibleDirections = GetPossiblePosition(vector, DirectionIsValidForHunt);
+                    Direction direction = possibleDirections[_rand.Next(0, possibleDirections.Length)];
+                    _map[y, x] |= direction;
+                    MapVector newVector = vector + direction;
+                    return newVector;
                 }
             }
         }
         return null;
     }
-    private Direction GetOppositeDirection(Direction dir)
+    private static Direction GetOppositeDirection(Direction dir)
     {
         return dir switch
         {
@@ -55,24 +63,26 @@ public class MazeHuntKillGenerator : IMapProvider
         };
     }
 
-    private Direction[] getPossiblePosition(MapVector vector)
+    private Direction[] GetPossiblePosition(MapVector vector, IsValid isValid)
     {
         List<Direction> possibleDirections = new List<Direction>();
 
         foreach (Direction dir in Enum.GetValues(typeof(Direction)))
         {
-            if (DirectionIsValid(vector + dir))
+            if (vector.X > 0 && vector.Y > 0 && vector.X < _map.GetLength(1)-1 && vector.Y < _map.GetLength(0) && isValid(vector + dir))
             {
                 possibleDirections.Add(dir);
             }
         }
         return possibleDirections.ToArray();
     }
-
-    private bool DirectionIsValid(MapVector vector)
+    private bool DirectionIsValidForHunt(MapVector vector)
     {
-        return _map[vector.Y, vector.X] == Direction.None
-            && vector.InsideBoundary(_map.GetLength(1), _map.GetLength(0));
+        return _map[vector.Y, vector.X] != Direction.None;
+    }
+    private bool DirectionIsValidForWalk(MapVector vector)
+    {
+        return _map[vector.Y, vector.X] == Direction.None;
     }
 
     public Direction[,] CreateMap(int width, int height)
@@ -85,7 +95,7 @@ public class MazeHuntKillGenerator : IMapProvider
         MapVector? currentVector = _startingVector!;
         while (currentVector != null)
         {
-            while (getPossiblePosition(currentVector).Length > 0)
+            while (GetPossiblePosition(currentVector, DirectionIsValidForWalk).Length > 0)
             {
                 currentVector = Walking(currentVector);
             }
