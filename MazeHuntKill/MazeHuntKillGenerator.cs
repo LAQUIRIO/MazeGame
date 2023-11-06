@@ -25,27 +25,38 @@ public class MazeHuntKillGenerator : IMapProvider
     private MapVector Walking(MapVector currentVector)
     {
         Direction[] possibleDirections = GetPossiblePosition(currentVector, DirectionIsValidForWalk);
-        Direction direction = possibleDirections[_rand.Next(0, possibleDirections.Length)];
-        _map[currentVector.X, currentVector.Y] |= direction;
+        Direction direction = possibleDirections[_rand.Next(0, possibleDirections.Length-1)];
+        _map[currentVector.Y, currentVector.X] |= direction;
         MapVector newVector = currentVector + direction;
-        _map[newVector.X, newVector.Y] |= GetOppositeDirection(direction);
+        _map[newVector.Y, newVector.X] |= GetOppositeDirection(direction);
         return newVector;
     }
     private MapVector? Hunt()
     {
-        for (int y = 0; y < _map.GetLength(1); y++)
+        List<MapVector> huntVectors = new List<MapVector>();
+        for (int y = 0; y < _map.GetLength(0); y++)
         {
-            for (int x = 0; x < _map.GetLength(0); x++)
+            for (int x = 0; x < _map.GetLength(1); x++)
             {
                 MapVector vector = new MapVector(x, y);
-                if (_map[y, x] == Direction.None)
+                bool isHuntVector = GetPossiblePosition(vector, DirectionIsValidForHunt).Length > 0;
+                if (_map[y, x] == Direction.None && isHuntVector)
                 {
-                    Direction[] possibleDirections = GetPossiblePosition(vector, DirectionIsValidForHunt);
-                    Direction direction = possibleDirections[_rand.Next(0, possibleDirections.Length)];
-                    _map[y, x] |= direction;
-                    MapVector newVector = vector + direction;
-                    return newVector;
+                    huntVectors.Add(vector);
                 }
+            }
+        }
+        if (huntVectors.Count > 0)
+        {
+            MapVector vector = huntVectors[_rand.Next(0, huntVectors.Count - 1)];
+            Direction[] possibleDirections = GetPossiblePosition(vector, DirectionIsValidForHunt);
+            if (possibleDirections.Length != 0)
+            {
+                Direction direction = possibleDirections[_rand.Next(0, possibleDirections.Length - 1)];
+                _map[vector.Y, vector.X] |= direction;
+                MapVector newVector = vector + direction;
+                _map[newVector.Y, newVector.X] |= GetOppositeDirection(direction);
+                return newVector;
             }
         }
         return null;
