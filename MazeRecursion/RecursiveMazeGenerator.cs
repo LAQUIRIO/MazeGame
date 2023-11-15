@@ -78,23 +78,16 @@ internal class RecursiveMazeGenerator : IMapProvider
         {
             throw new ArgumentException("Width and height must be greater than 2");
         }
-        Walk(_startingVector);
+        _directions = new Direction[height, width];
+        int x = _rand.Next(0, width);
+        int y = _rand.Next(0, height);
+        MapVector startingVector = new MapVector(x, y);
+        Walk(startingVector);
         return _directions;
     }
 
     public Direction[,] CreateMap()
     {
-        int width = 5;
-        int height = 5;
-        _directions = new Direction[width, height];
-
-        if (_startingVector == null)
-        {
-            int x = _rand.Next(0, _directions.GetLength(0));
-            int y = _rand.Next(0, _directions.GetLength(1));
-            _startingVector = new MapVector(x, y);
-        }
-        Walk(_startingVector);
-        return _directions;
+        return CreateMap(5,5);
     }
 }
