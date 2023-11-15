@@ -5,12 +5,10 @@ delegate bool IsValid(MapVector vector);
 internal class MazeHuntKillGenerator : IMapProvider
 {
     private readonly Random _rand;
-    private MapVector? _startingVector;
     private Direction[,]? _map;
 
     internal MazeHuntKillGenerator(int? seed)
     {
-        _startingVector = startingVector;
         if (seed.HasValue)
         {
             _rand = new Random(seed.Value);
@@ -20,41 +18,64 @@ internal class MazeHuntKillGenerator : IMapProvider
             _rand = new Random();
         }
     }
+
+    public Direction[,] CreateMap(int width, int height)
+    {
+        if (width < 3 || height < 3 || width > 25 || height > 25)
+        {
+            throw new Exception("Invalid width or height");
+        }
+        _map = new Direction[height, width];
+        MapVector? currentVector  = new MapVector(_rand.Next(0, width - 1), _rand.Next(0, height - 1));
+        try {
+            while (currentVector != null)
+            {
+                while (GetPossiblePosition(currentVector, WalkDirectionIsValid).Length > 0)
+                {
+                    currentVector = Walking(currentVector);
+                }
+                currentVector = Hunt();
+            }
+
+        }
+        catch (Exception e)
+        {
+              throw new Exception("Maze Map invalid");
+        }
+            return _map;
+    }
+
+    public Direction[,] CreateMap()
+    {
+        return CreateMap(5, 5);
+    }
     private MapVector Walking(MapVector currentVector)
     {
-        Direction[] possibleDirections = GetPossiblePosition(currentVector, DirectionIsValidForWalk);
+        Direction[] possibleDirections = GetPossiblePosition(currentVector, WalkDirectionIsValid);
         Direction direction = possibleDirections[_rand.Next(0, possibleDirections.Length-1)];
-        _map[currentVector.Y, currentVector.X] |= direction;
+        _map![currentVector.Y, currentVector.X] |= direction;
         MapVector newVector = currentVector + direction;
         _map[newVector.Y, newVector.X] |= GetOppositeDirection(direction);
         return newVector;
     }
     private MapVector? Hunt()
     {
-        List<MapVector> huntVectors = new List<MapVector>();
-        for (int y = 0; y < _map.GetLength(0); y++)
+        //List<MapVector> huntVectors = new List<MapVector>();
+        for (int y = 0; y < _map!.GetLength(0); y++)
         {
             for (int x = 0; x < _map.GetLength(1); x++)
             {
                 MapVector vector = new MapVector(x, y);
-                bool isHuntVector = GetPossiblePosition(vector, DirectionIsValidForHunt).Length > 0;
-                if (_map[y, x] == Direction.None && isHuntVector)
+                bool isHuntVectorValid = GetPossiblePosition(vector, HuntDirectionIsValid).Length > 0;
+                if (_map[y, x] == Direction.None && isHuntVectorValid)
                 {
-                    huntVectors.Add(vector);
+                    Direction[] possibleDirections = GetPossiblePosition(vector, HuntDirectionIsValid);
+                    Direction direction = possibleDirections[_rand.Next(0, possibleDirections.Length - 1)];
+                    _map[vector.Y, vector.X] |= direction;
+                    MapVector newVector = vector + direction;
+                    _map[newVector.Y, newVector.X] |= GetOppositeDirection(direction);
+                    return newVector;
                 }
-            }
-        }
-        if (huntVectors.Count > 0)
-        {
-            MapVector vector = huntVectors[_rand.Next(0, huntVectors.Count - 1)];
-            Direction[] possibleDirections = GetPossiblePosition(vector, DirectionIsValidForHunt);
-            if (possibleDirections.Length != 0)
-            {
-                Direction direction = possibleDirections[_rand.Next(0, possibleDirections.Length - 1)];
-                _map[vector.Y, vector.X] |= direction;
-                MapVector newVector = vector + direction;
-                _map[newVector.Y, newVector.X] |= GetOppositeDirection(direction);
-                return newVector;
             }
         }
         return null;
@@ -72,7 +93,7 @@ internal class MazeHuntKillGenerator : IMapProvider
         };
     }
 
-    private Direction[] GetPossiblePosition(MapVector vector, IsValid isValid)
+    private Direction[] GetPossiblePosition(MapVector vector, IsValid isDirectionValid)
     {
         List<Direction> possibleDirections = new List<Direction>();
         Direction[] directions = { Direction.N, Direction.S, Direction.E, Direction.W };
@@ -80,43 +101,20 @@ internal class MazeHuntKillGenerator : IMapProvider
         foreach (Direction dir in directions)
         {
             MapVector tempVector = vector + dir;
-            if (tempVector.X >= 0 && tempVector.Y >= 0 && tempVector.X < _map.GetLength(1) && tempVector.Y < _map.GetLength(0) && isValid(tempVector))
+            if (tempVector.InsideBoundary(_map!.GetLength(1), _map.GetLength(0)) && isDirectionValid(tempVector))
             {
                 possibleDirections.Add(dir);
             }
         }
         return possibleDirections.OrderBy(item => _rand.Next()).ToArray();
     }
-    private bool DirectionIsValidForHunt(MapVector vector)
-    {
-        return _map[vector.Y, vector.X] != Direction.None;
-    }
-    private bool DirectionIsValidForWalk(MapVector vector)
-    {
-        return _map[vector.Y, vector.X] == Direction.None;
-    }
 
-    public Direction[,] CreateMap(int width, int height)
+    private bool HuntDirectionIsValid(MapVector vector)
     {
-        _map = new Direction[height, width];
-        if (_startingVector == null)
-        {
-            _startingVector = new MapVector(_rand.Next(0, width-1), _rand.Next(0, height-1));
-        }
-        MapVector? currentVector = _startingVector!;
-        while (currentVector != null)
-        {
-            while (GetPossiblePosition(currentVector, DirectionIsValidForWalk).Length > 0)
-            {
-                currentVector = Walking(currentVector);
-            }
-            currentVector = Hunt();
-        }
-        return _map;
+        return _map![vector.Y, vector.X] != Direction.None;
     }
-
-    public Direction[,] CreateMap()
+    private bool WalkDirectionIsValid(MapVector vector)
     {
-        throw new NotImplementedException();
+        return _map![vector.Y, vector.X] == Direction.None;
     }
 }
