@@ -1,16 +1,14 @@
 ﻿using Maze;
-using System.Linq;
-using System.Numerics;
 
 namespace MazeHuntKill;
 delegate bool IsValid(MapVector vector);
-public class MazeHuntKillGenerator : IMapProvider
+internal class MazeHuntKillGenerator : IMapProvider
 {
     private readonly Random _rand;
     private MapVector? _startingVector;
     private Direction[,]? _map;
 
-    public MazeHuntKillGenerator(MapVector? startingVector, int? seed)
+    internal MazeHuntKillGenerator(int? seed)
     {
         _startingVector = startingVector;
         if (seed.HasValue)
