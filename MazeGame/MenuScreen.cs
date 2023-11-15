@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MazeRecursion;
+using MazeHuntKill;
 using System;
 using Microsoft.Xna.Framework.Graphics;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
@@ -20,6 +21,7 @@ namespace MazeGame
     {
         Recursive_Generator,
         Select_Maze_From_File,
+        Hunt_Kill_Generator,
         Exit
     }
     internal class MenuScreen : DrawableGameComponent
@@ -32,6 +34,7 @@ namespace MazeGame
         private readonly Game _game;
         private bool _dimensionChange;
         private int _width, _height;
+        private MainMenuText chosenGeneratotionMethod;
         private InputManager _inputManager;
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
@@ -87,10 +90,18 @@ namespace MazeGame
             switch (_selectedText)
             {
                 case MainMenuText.Recursive_Generator:
+                    chosenGeneratotionMethod = MainMenuText.Recursive_Generator;
                     _screenState = typeof(SizeMenuText);
                     SetSizeMenuKeys();
                     _selectedText = SizeMenuText.Width;
                     break;
+                case MainMenuText.Hunt_Kill_Generator:
+                    chosenGeneratotionMethod = MainMenuText.Hunt_Kill_Generator;
+                    _screenState = typeof(SizeMenuText);
+                    SetSizeMenuKeys();
+                    _selectedText = SizeMenuText.Width;
+                    break;
+
                 case MainMenuText.Select_Maze_From_File:
                     try
                     {
@@ -101,7 +112,14 @@ namespace MazeGame
                     }
                         break;
                 case SizeMenuText.Generate_Maze:
-                    _loadMaze(new RecursiveMazeGenerator(null, null), (_width-1)/2, (_height-1)/2);
+                    if (chosenGeneratotionMethod == MainMenuText.Hunt_Kill_Generator)
+                    {
+                        _loadMaze(HuntMazeFactory.Create(), (_width - 1) / 2, (_height - 1) / 2);
+                    }
+                    else if (chosenGeneratotionMethod == MainMenuText.Recursive_Generator)
+                    {
+                        _loadMaze(RecursiveMazeFactory.Create(), (_width - 1) / 2, (_height - 1) / 2);
+                    }
                     break;
                 case SizeMenuText.Exit:
                     _screenState = typeof(MainMenuText);
