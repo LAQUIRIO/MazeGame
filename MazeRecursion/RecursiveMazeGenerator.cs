@@ -6,7 +6,7 @@ internal class RecursiveMazeGenerator : IMapProvider
     private Direction[,]? _directions;
     private readonly List<MapVector> _path;
     private readonly Random _rand;
-    public RecursiveMazeGenerator(int? randomSeed)
+    internal RecursiveMazeGenerator(int? randomSeed)
     {
         _path = new List<MapVector>();
         if (randomSeed.HasValue)
