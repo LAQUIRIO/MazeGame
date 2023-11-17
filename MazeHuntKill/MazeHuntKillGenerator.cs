@@ -21,7 +21,7 @@ internal class MazeHuntKillGenerator : IMapProvider
 
     public Direction[,] CreateMap(int width, int height)
     {
-        if (width < 3 || height < 3 || width > 25 || height > 25)
+        if (width < 2 || height < 2 || width > 25 || height > 25)
         {
             throw new Exception("Invalid width or height");
         }
@@ -40,7 +40,7 @@ internal class MazeHuntKillGenerator : IMapProvider
         }
         catch (Exception e)
         {
-              throw new Exception("Maze Map invalid");
+            throw new Exception("Maze Map invalid");
         }
             return _map;
     }
