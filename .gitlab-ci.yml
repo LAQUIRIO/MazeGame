@@ -17,7 +17,7 @@ build-release:
         - apt-get install zip -y
         - apt-get install libfreetype6 -y
     script:
-    - dotnet build -c Release 
+    - dotnet build -c Release  -p:ExcludeProjects="**/*Tests.csproj"
 
 unit-test:
     stage: test
@@ -38,8 +38,9 @@ deploy:
         - apt-get update -y
         - apt-get install zip -y
         - apt-get install libfreetype6 -y
-        - dotnet publish -c Release -r win-x64 -o ./MazeGameFile /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained true
-        - zip -r MazeGame.zip ./MazeGameFile/*
+        - dotnet publish -c Release -r win-x64 -o ./MazeGameFile /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained true -p:ExcludeProjects="**/*Tests.csproj"
+        - cd ./MazeGameFile
+        - zip -r ../MazeGame.zip ./*
     artifacts:
         when: always
         expire_in: 2 weeks
