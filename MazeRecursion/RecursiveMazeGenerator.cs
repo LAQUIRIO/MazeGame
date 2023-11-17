@@ -74,9 +74,9 @@ internal class RecursiveMazeGenerator : IMapProvider
 
     public Direction[,] CreateMap(int width, int height)
     {
-        if (width < 3 || height < 3)
+        if (width < 2 || height < 2)
         {
-            throw new ArgumentException("Width and height must be greater than 2");
+            throw new ArgumentException("Width and height must be greater than 1");
         }
         _directions = new Direction[height, width];
         int x = _rand.Next(0, width);
