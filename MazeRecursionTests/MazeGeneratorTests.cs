@@ -1,10 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MazeRecursion;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MazeRecursion;
 using Maze;
 
 namespace MazeRecursion.Tests
@@ -12,23 +6,23 @@ namespace MazeRecursion.Tests
     [TestClass()]
     public class MazeGeneratorTests
     {
-        private IMapProvider _mapProvider = new MazeGenerator(null, null);
+        private IMapProvider _mapProvider = new RecursiveMazeGenerator(null);
         [TestInitialize]
         public void TestInitialize()
         {
             MapVector vector = new MapVector(0, 0);
-            _mapProvider = new MazeGenerator(vector, 1);
+            _mapProvider = new RecursiveMazeGenerator(1);
         }
         [TestMethod()]
         public void CreateMapWithValuesTest()
         {
             Direction[,] ExpectedMaze = new Direction[,]
             {
-                {Direction.S, Direction.E|Direction.S, Direction.E|Direction.W, Direction.S|Direction.W},
-                {Direction.N|Direction.E, Direction.N|Direction.W, Direction.S, Direction.N|Direction.S},
-                {Direction.S, Direction.E|Direction.S, Direction.N|Direction.E|Direction.W, Direction.N|Direction.W},
-                {Direction.N|Direction.E|Direction.S, Direction.N|Direction.W, Direction.S|Direction.E, Direction.W|Direction.S},
-                {Direction.N|Direction.E, Direction.W|Direction.E, Direction.W|Direction.N, Direction.N},
+                {Direction.E, Direction.E|Direction.W, Direction.S|Direction.W, Direction.S},
+                {Direction.E|Direction.S, Direction.S|Direction.W, Direction.N|Direction.S, Direction.N|Direction.S},
+                {Direction.S|Direction.N, Direction.N|Direction.S, Direction.N|Direction.E, Direction.N|Direction.W|Direction.S},
+                {Direction.N|Direction.S, Direction.N|Direction.E, Direction.S|Direction.W, Direction.N|Direction.S},
+                {Direction.N|Direction.E, Direction.W, Direction.N|Direction.E, Direction.N|Direction.W},
             };
             int expectedWidth = 4;
             int expectedHeight = 5;
@@ -50,11 +44,11 @@ namespace MazeRecursion.Tests
         {
             Direction[,] ExpectedMaze = new Direction[,]
             {
-                {Direction.S, Direction.E|Direction.S, Direction.E|Direction.W, Direction.S|Direction.W, Direction.S},
-                {Direction.N|Direction.E, Direction.N|Direction.W, Direction.S, Direction.N|Direction.E,  Direction.N|Direction.W|Direction.S},
-                {Direction.S|Direction.E, Direction.E|Direction.S|Direction.W, Direction.N|Direction.W, Direction.E|Direction.S,Direction.N|Direction.W},
-                {Direction.N|Direction.S, Direction.N|Direction.E, Direction.S|Direction.W, Direction.N|Direction.E, Direction.S|Direction.W},
-                {Direction.N|Direction.E, Direction.W, Direction.E|Direction.N, Direction.E|Direction.W, Direction.N|Direction.W},
+                {Direction.S, Direction.E, Direction.E|Direction.W, Direction.S|Direction.W, Direction.S},
+                {Direction.N|Direction.S, Direction.E|Direction.S, Direction.S|Direction.W, Direction.N|Direction.S,  Direction.N|Direction.S},
+                {Direction.S|Direction.N, Direction.N|Direction.S, Direction.N|Direction.S, Direction.E|Direction.N, Direction.N|Direction.S|Direction.W},
+                {Direction.N|Direction.S, Direction.N|Direction.S, Direction.N|Direction.E, Direction.S|Direction.W, Direction.S|Direction.N},
+                {Direction.N|Direction.E, Direction.W|Direction.E|Direction.N, Direction.W, Direction.E|Direction.N, Direction.N|Direction.W},
             };
             int expectedArraySizes = 5;
             Direction[,] directions = _mapProvider.CreateMap();
@@ -77,7 +71,7 @@ namespace MazeRecursion.Tests
         [DataRow(10, 20)]
         public void RandomMapGenerationTest(int with, int height)
         {
-            _mapProvider = new MazeGenerator(null, null);
+            _mapProvider = new RecursiveMazeGenerator(null);
             Direction[,] directions = _mapProvider.CreateMap(with, height);
             Assert.AreEqual(with, directions.GetLength(1));
             Assert.AreEqual(height, directions.GetLength(0));
