@@ -21,11 +21,11 @@ public class MazeHuntKillTests
         {
             Direction[,] ExpectedMaze = new Direction[,]
             {
-                {Direction.E, Direction.E|Direction.W, Direction.S|Direction.W, Direction.S},
-                {Direction.E|Direction.S, Direction.S|Direction.W, Direction.N|Direction.S, Direction.N|Direction.S},
-                {Direction.S|Direction.N, Direction.N|Direction.S, Direction.N|Direction.E, Direction.N|Direction.W|Direction.S},
-                {Direction.N|Direction.S, Direction.N|Direction.E, Direction.S|Direction.W, Direction.N|Direction.S},
-                {Direction.N|Direction.E, Direction.W, Direction.N|Direction.E, Direction.N|Direction.W},
+                {Direction.E|Direction.S, Direction.E|Direction.W, Direction.E|Direction.W, Direction.S|Direction.W},
+                {Direction.N|Direction.S, Direction.S|Direction.E, Direction.W|Direction.S, Direction.N|Direction.S},
+                {Direction.S|Direction.N, Direction.N|Direction.S, Direction.N|Direction.S, Direction.N|Direction.S},
+                {Direction.N, Direction.N|Direction.S, Direction.N|Direction.E, Direction.N|Direction.W},
+                {Direction.E, Direction.N|Direction.E|Direction.W, Direction.W|Direction.E, Direction.W},
             };
             int expectedWidth = 4;
             int expectedHeight = 5;
@@ -47,11 +47,11 @@ public class MazeHuntKillTests
         {
             Direction[,] ExpectedMaze = new Direction[,]
             {
-                {Direction.S, Direction.E, Direction.E|Direction.W, Direction.S|Direction.W, Direction.S},
-                {Direction.N|Direction.S, Direction.E|Direction.S, Direction.S|Direction.W, Direction.N|Direction.S,  Direction.N|Direction.S},
-                {Direction.S|Direction.N, Direction.N|Direction.S, Direction.N|Direction.S, Direction.E|Direction.N, Direction.N|Direction.S|Direction.W},
-                {Direction.N|Direction.S, Direction.N|Direction.S, Direction.N|Direction.E, Direction.S|Direction.W, Direction.S|Direction.N},
-                {Direction.N|Direction.E, Direction.W|Direction.E|Direction.N, Direction.W, Direction.E|Direction.N, Direction.N|Direction.W},
+                {Direction.E, Direction.E|Direction.W, Direction.E|Direction.W, Direction.E|Direction.S|Direction.W, Direction.S|Direction.W},
+                {Direction.E|Direction.S, Direction.E|Direction.W, Direction.E|Direction.W, Direction.N|Direction.W,  Direction.N},
+                {Direction.S|Direction.N, Direction.E|Direction.S, Direction.E|Direction.W, Direction.E|Direction.W, Direction.S|Direction.W},
+                {Direction.N|Direction.S, Direction.N|Direction.S, Direction.S|Direction.E, Direction.E|Direction.W, Direction.W|Direction.N},
+                {Direction.N|Direction.E, Direction.W|Direction.N, Direction.N|Direction.E, Direction.E|Direction.W, Direction.W},
             };
             int expectedArraySizes = 5;
             Direction[,] directions = _mapProvider.CreateMap();
