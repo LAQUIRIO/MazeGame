@@ -39,7 +39,7 @@ deploy:
         - apt-get install zip -y
         - apt-get install libfreetype6 -y
         - dotnet publish -c Release -r win-x64 -o ./MazeGameFile /p:PublishReadyToRun=false /p:TieredCompilation=false --self-contained true
-        - zip -r MazeGame.zip ./MazeGameFile
+        - zip -r MazeGame.zip ./MazeGameFile/*
     artifacts:
         when: always
         expire_in: 2 weeks
