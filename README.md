@@ -1,4 +1,4 @@
-# BoucherAssignment2
+# Maze Game
 
 
 
